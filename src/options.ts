@@ -31,14 +31,8 @@ const getResolver = (originalResolver: UserOptions['resolver']) => {
   if (typeof resolver !== 'string') return resolver
 
   switch (resolver) {
-    case 'vue':
-      resolver = VueResolver()
-      break
     case 'react':
       resolver = ReactResolver()
-      break
-    case 'solid':
-      resolver = SolidResolver()
       break
     default:
       throw new Error(`Unsupported resolver: ${resolver}`)

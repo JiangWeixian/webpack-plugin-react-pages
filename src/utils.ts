@@ -3,7 +3,6 @@ import { URLSearchParams } from 'url'
 import Debug from 'debug'
 import { slash } from '@antfu/utils'
 import {
-  MODULE_ID_VIRTUAL,
   cacheAllRouteRE,
   countSlashRE,
   dynamicRouteRE,
@@ -13,7 +12,6 @@ import {
   replaceIndexRE,
 } from './constants'
 
-import type { ModuleNode, ViteDevServer } from 'vite'
 import type { ResolvedOptions } from './types'
 
 export const debug = {
@@ -59,17 +57,6 @@ export function resolveImportMode(filepath: string, options: ResolvedOptions) {
   const mode = options.importMode
   if (typeof mode === 'function') return mode(filepath, options)
   return mode
-}
-
-export function invalidatePagesModule(server: ViteDevServer) {
-  const { moduleGraph } = server
-  const mods = moduleGraph.getModulesByFile(MODULE_ID_VIRTUAL)
-  if (mods) {
-    const seen = new Set<ModuleNode>()
-    mods.forEach((mod) => {
-      moduleGraph.invalidateModule(mod, seen)
-    })
-  }
 }
 
 export function normalizeCase(str: string, caseSensitive: boolean) {

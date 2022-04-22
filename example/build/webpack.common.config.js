@@ -1,4 +1,4 @@
-// const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const { RoutesWebpackPlugin } = require('webpack-plugin-routes')
 
@@ -28,11 +28,11 @@ const common = {
         test: /\.tsx?$/,
         exclude: /node_modules/,
         use: [
-          { loader: 'cache-loader' },
-          {
-            loader: 'thread-loader',
-            options: configs.workerpool,
-          },
+          // { loader: 'cache-loader' },
+          // {
+          //   loader: 'thread-loader',
+          //   options: configs.workerpool,
+          // },
           { loader: 'babel-loader' },
           {
             loader: 'ts-loader',
@@ -71,12 +71,12 @@ const common = {
         },
       ],
     }),
-    // new ForkTsCheckerWebpackPlugin({
-    //   typescript: {
-    //     configFile: configs.path.tsconfig,
-    //   },
-    //   async: true,
-    // }),
+    new ForkTsCheckerWebpackPlugin({
+      typescript: {
+        configFile: configs.path.tsconfig,
+      },
+      async: true,
+    }),
   ],
 }
 

@@ -2,7 +2,7 @@ import { extname, join, resolve } from 'path'
 import { slash, toArray } from '@antfu/utils'
 import { resolveOptions } from './options'
 import { getPageFiles } from './files'
-import { debug, invalidatePagesModule, isTarget } from './utils'
+import { debug, isTarget } from './utils'
 
 import type { FSWatcher } from 'fs'
 import type { PageOptions, ResolvedOptions, UserOptions } from './types'
@@ -32,14 +32,12 @@ export class PageContext {
       path = slash(path)
       if (!isTarget(path, this.options)) return
       await this.removePage(path)
-      this.onUpdate()
     })
     watcher.on('add', async (path) => {
       path = slash(path)
       if (!isTarget(path, this.options)) return
       const page = this.options.dirs.find((i) => path.startsWith(slash(resolve(this.root, i.dir))))!
       await this.addPage(path, page)
-      this.onUpdate()
     })
 
     watcher.on('change', async (path) => {
@@ -69,16 +67,6 @@ export class PageContext {
     debug.pages('remove', path)
     this._pageRouteMap.delete(path)
     await this.options.resolver.hmr?.removed?.(this, path)
-  }
-
-  onUpdate() {
-    if (!this._server) return
-
-    invalidatePagesModule(this._server)
-    debug.hmr('Reload generated pages.')
-    this._server.ws.send({
-      type: 'full-reload',
-    })
   }
 
   async resolveRoutes() {

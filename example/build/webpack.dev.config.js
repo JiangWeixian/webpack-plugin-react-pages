@@ -1,6 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
-const ThreadLoader = require('thread-loader')
+// const ThreadLoader = require('thread-loader')
 const WebpackBar = require('webpackbar')
 const webpack = require('webpack')
 const { merge } = require('webpack-merge')
@@ -9,7 +9,7 @@ const configs = require('./config')
 const common = require('./webpack.common.config')
 const port = 8080
 
-ThreadLoader.warmup(configs.workerpool, ['ts-loader', 'babel-loader'])
+// ThreadLoader.warmup(configs.workerpool, ['ts-loader', 'babel-loader'])
 
 /**
  * @type import('webpack').Configuration
@@ -17,6 +17,7 @@ ThreadLoader.warmup(configs.workerpool, ['ts-loader', 'babel-loader'])
 const dev = {
   devtool: 'eval-cheap-module-source-map',
   mode: 'development',
+  cache: false,
   output: {
     path: configs.path.output,
     filename: '[name].js',
@@ -33,12 +34,12 @@ const dev = {
     clientLogLevel: 'silent',
     noInfo: true,
     public: `http://localhost:${port}`,
-    proxy: {
-      '/proxy': {
-        target: 'http://localhost:3000/',
-        changeOrigin: true,
-      },
-    },
+    // proxy: {
+    //   '/proxy': {
+    //     target: 'http://localhost:3000/',
+    //     changeOrigin: true,
+    //   },
+    // },
   },
   optimization: {
     moduleIds: 'named',

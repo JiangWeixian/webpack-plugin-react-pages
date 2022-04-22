@@ -6,7 +6,7 @@ import { extsToGlob } from './utils'
 import type { PageOptions, ResolvedOptions } from './types'
 
 function getIgnore(exclude: string[]) {
-  return ['node_modules', '.git', '**/__*__/**', ...exclude]
+  return ['node_modules', '.git', '**/__*__/**', '**/*.d.ts', ...exclude]
 }
 
 /**

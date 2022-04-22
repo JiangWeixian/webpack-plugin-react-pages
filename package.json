@@ -22,6 +22,21 @@
       "require": "./dist/index.cjs",
       "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs"
+    },
+    "./loader": {
+      "require": "./dist/loader.cjs",
+      "types": "./dist/loader.d.ts",
+      "import": "./dist/loader.mjs"
+    },
+    "./babel": {
+      "require": "./dist/babel.cjs",
+      "types": "./dist/babel.d.ts",
+      "import": "./dist/babel.mjs"
+    },
+    "./constants": {
+      "require": "./dist/constants.cjs",
+      "types": "./dist/constants.d.ts",
+      "import": "./dist/constants.mjs"
     }
   },
   "main": "dist/index.cjs",
@@ -50,11 +65,16 @@
   },
   "dependencies": {
     "@antfu/utils": "^0.5.1",
+    "chokidar": "^3.5.3",
     "debug": "^4.3.4",
-    "fast-glob": "^3.2.11"
+    "fast-glob": "^3.2.11",
+    "pathe": "^0.2.0",
+    "webpack-virtual-modules": "^0.4.3"
   },
   "devDependencies": {
     "@aiou/eslint-config": "^0.5.1",
+    "@babel/core": "7.14.6",
+    "@babel/types": "^7.17.0",
     "@changesets/cli": "^2.21.1",
     "@rollup/plugin-alias": "^3.1.9",
     "@rollup/plugin-commonjs": "^21.0.2",
@@ -85,6 +105,19 @@
   "config": {
     "commitizen": {
       "path": "cz-emoji"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "loader": [
+        "dist/loader.d.ts"
+      ],
+      "babel": [
+        "dist/babel.d.ts"
+      ],
+      "constants": [
+        "dist/constants.d.ts"
+      ]
     }
   }
 }

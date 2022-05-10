@@ -15,7 +15,7 @@ export default defineConfig([
   // an array for the `output` option, where we can specify
   // `file` and `format` for each target)
   {
-    input: ['src/index.ts', 'src/loader.ts', 'src/babel.ts'],
+    input: ['src/index.ts', 'src/loader.ts'],
     plugins: [
       /**
        * Bundle devDependencies, exclude dependencies
@@ -38,8 +38,18 @@ export default defineConfig([
       size(),
     ],
     output: [
-      { dir: 'dist', entryFileNames: '[name].cjs', format: 'cjs' },
-      { dir: 'dist', entryFileNames: '[name].mjs', format: 'es' },
+      {
+        dir: 'dist',
+        entryFileNames: '[name].cjs',
+        chunkFileNames: 'chunks/[name].cjs',
+        format: 'cjs',
+      },
+      {
+        dir: 'dist',
+        entryFileNames: '[name].mjs',
+        chunkFileNames: 'chunks/[name].mjs',
+        format: 'es',
+      },
     ],
   },
 ])

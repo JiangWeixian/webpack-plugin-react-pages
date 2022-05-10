@@ -25,5 +25,5 @@ export const countSlashRE = /\//g
 export const replaceIndexRE = /\/?index$/
 
 // webpack
-export const VIRTUAL_ROUTES_ID = 'virtual/routes'
-export const VIRTUAL_ROUTES_ID_TEST = /virtual\/routes/
+export const VIRTUAL_ROUTES_ID = 'virtual/react-pages'
+export const VIRTUAL_ROUTES_ID_TEST = /virtual\/react-pages/

@@ -1,7 +1,7 @@
 import React from 'react'
 import { useRoutes, HashRouter } from 'react-router-dom'
 
-import routes from 'virtual/routes'
+import routes from 'virtual/react-pages'
 
 console.log(routes)
 

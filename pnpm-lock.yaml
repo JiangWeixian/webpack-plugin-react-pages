@@ -28,7 +28,7 @@ importers:
       rimraf: 3.0.2
       rollup: 2.72.1
       rollup-plugin-bundle-size: ^1.0.3
-      rollup-plugin-condition-exports: ^1.3.1
+      rollup-plugin-condition-exports: ^1.4.1
       rollup-plugin-node-externals: ^4.0.0
       rollup-plugin-size: ^0.2.2
       rollup-plugin-typescript2: 0.30.0
@@ -36,7 +36,7 @@ importers:
       ts-node: 10.2.1
       tslib: 2.3.1
       typescript: 4.4.3
-      vite-plugin-pages: ^0.23.0
+      vite-plugin-pages: 0.23.0
       webpack: 5.44.0
       webpack-virtual-modules: ^0.4.3
     dependencies:
@@ -66,7 +66,7 @@ importers:
       rimraf: 3.0.2
       rollup: 2.72.1
       rollup-plugin-bundle-size: 1.0.3
-      rollup-plugin-condition-exports: 1.3.1
+      rollup-plugin-condition-exports: 1.4.1
       rollup-plugin-node-externals: 4.0.0_rollup@2.72.1
       rollup-plugin-size: 0.2.2
       rollup-plugin-typescript2: 0.30.0_rollup@2.72.1+typescript@4.4.3
@@ -2677,8 +2677,8 @@ packages:
     resolution: {integrity: sha512-Hcv+nVC0kZnQ3tD9GVu5xSMR4VVYOteQIr/hwFPVEvPdlXqgGEuRjiheChHgdM+JyqdgNcmzZOX/tnl0JOiI7A==}
     dev: true
 
-  /@lotips/core/0.9.1:
-    resolution: {integrity: sha512-2Or8L1CGf3v+Mr8G8CxDwuX1WJgg647QBCiDU36Wdy6kTYBuWbhulJZFaX9wBlR8eDo9Z11P6ZS26FcUBC+0uw==}
+  /@lotips/core/0.9.3:
+    resolution: {integrity: sha512-KBt9Q4ZUi5/8DdvKjy1NIc8igaioaAgi37bMUoKU2mm0RUiZJBi6dLZKfVpAmU+2o8zhAXhubcf+YiNUMliXew==}
     engines: {node: '>=14'}
     dependencies:
       is-mobile: 3.1.1
@@ -2707,7 +2707,7 @@ packages:
     dev: true
 
   /@nodelib/fs.scandir/2.1.5:
-    resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
+    resolution: {integrity: sha1-dhnC6yGyVIP20WdUi0z9WnSIw9U=, tarball: '@nodelib/fs.scandir/-/@nodelib/fs.scandir-2.1.5.tgz'}
     engines: {node: '>= 8'}
     dependencies:
       '@nodelib/fs.stat': 2.0.5
@@ -12136,10 +12136,10 @@ packages:
       maxmin: 2.1.0
     dev: true
 
-  /rollup-plugin-condition-exports/1.3.1:
-    resolution: {integrity: sha512-imQIoMUb+FPfRgdH3kLT8rx3wfxGwNq+bSj+nRZdiD8/IEOWdQ/bauCQmDnDAmCj1JZcW9FHwAg0jKYxDzF2cw==}
+  /rollup-plugin-condition-exports/1.4.1:
+    resolution: {integrity: sha512-MjBbMdr6a8/zb5ZX+wrtljzIktb88yA5x2ffEh/BI1w7KcmYh3izHiFp6ZwQ46jd/lz1bSfuRIVvhhh25muT6A==}
     dependencies:
-      '@lotips/core': 0.9.1
+      '@lotips/core': 0.9.3
       '@rollup/pluginutils': 4.2.0
       debug: 4.3.4
       fast-glob: 3.2.11

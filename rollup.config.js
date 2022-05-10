@@ -34,7 +34,7 @@ export default defineConfig([
        * Auto setup package.json
        * @see {@link https://github.com/JiangWeixian/rollup-plugin-condition-exports}
        */
-      ce(),
+      ce({ names: ['index'] }),
       size(),
     ],
     output: [

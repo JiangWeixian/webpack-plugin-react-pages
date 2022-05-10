@@ -11,7 +11,6 @@ async function RoutesLoader(this: webpack.LoaderContext<any>, source: string) {
     return null
   }
 
-  // already work fined
   // console.log(source)
   callback(null, source)
   return null

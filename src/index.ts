@@ -1,4 +1,5 @@
 import type webpack from 'webpack'
+// eslint-disable-next-line import/no-extraneous-dependencies -- rollup will bundle this package
 import { PageContext } from 'vite-plugin-pages'
 import VirtualModulesPlugin from 'webpack-virtual-modules'
 import { resolve } from 'pathe'
@@ -13,8 +14,15 @@ const PLUGIN = 'ROUTES_PLUGIN'
 
 export class RoutesWebpackPlugin {
   apply(compiler: webpack.Compiler) {
-    const page = new PageContext({ resolver: 'react' })
-    const watcher = chokidar.watch('**/*.tsx', { cwd: process.cwd(), ignored: ['node_modules'] })
+    const page = new PageContext({ resolver: 'react', extensions: ['ts', 'tsx', 'js', 'jsx'] })
+    // TODO: root should as same as page.root
+    // this is not make sense
+    const watcher = chokidar.watch(process.cwd(), {
+      ignored: ['**/node_modules/**', '**/.git/**'],
+      ignoreInitial: true,
+      ignorePermissionErrors: true,
+      disableGlobbing: true,
+    })
 
     page.setupWatcher(watcher)
 
@@ -53,17 +61,12 @@ export class RoutesWebpackPlugin {
     virtualModules.apply(compiler)
 
     compiler.hooks.beforeCompile.tap(PLUGIN, async () => {
+      // fs watcher unlink run after searchGlob
+      // always generate new page route Map
+      page.pageRouteMap.clear()
       await page.searchGlob()
       const routes = await page.resolveRoutes()
-      console.log(routes)
-      virtualModules.writeModule('virtual/react-pages.ts', routes)
-    })
-
-    compiler.hooks.invalid.tap(PLUGIN, async () => {
-      console.log('invalid')
-      await page.searchGlob()
-      const routes = await page.resolveRoutes()
-      console.log(routes)
+      console.log('before compile')
       virtualModules.writeModule('virtual/react-pages.ts', routes)
     })
   }

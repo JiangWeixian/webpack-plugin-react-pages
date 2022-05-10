@@ -71,12 +71,12 @@ const common = {
         },
       ],
     }),
-    new ForkTsCheckerWebpackPlugin({
-      typescript: {
-        configFile: configs.path.tsconfig,
-      },
-      async: true,
-    }),
+    // new ForkTsCheckerWebpackPlugin({
+    //   typescript: {
+    //     configFile: configs.path.tsconfig,
+    //   },
+    //   async: true,
+    // }),
   ],
 }
 

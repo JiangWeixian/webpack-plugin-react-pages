@@ -17,7 +17,7 @@ const port = 8080
 const dev = {
   devtool: 'eval-cheap-module-source-map',
   mode: 'development',
-  cache: false,
+  cache: true,
   output: {
     path: configs.path.output,
     filename: '[name].js',

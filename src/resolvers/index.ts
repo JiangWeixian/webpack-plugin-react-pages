@@ -110,7 +110,9 @@ export function ReactResolver(): PageResolver {
       return resolveReactRoutes(ctx)
     },
     stringify: {
-      component: (path) => `React.createElement(${path})`,
+      // FIXME:
+      // component: (path) => `React.createElement(${path})`,
+      component: (path) => `${path}`,
       dynamicImport: (path) => `React.lazy(() => import("${path}"))`,
       final: (code) => `import React from "react";\n${code}`,
     },

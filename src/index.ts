@@ -1,16 +1,22 @@
+// @ts-nocheck
 import type webpack from 'webpack'
 import VirtualModulesPlugin from 'webpack-virtual-modules'
 import { resolve } from 'pathe'
 import chokidar from 'chokidar'
 
 import { PageContext } from './context'
+import { VIRTUAL_ROUTES_ID_TEST } from './constants'
+import path from 'path'
+
+const routesLoader = resolve(__dirname, 'loader.cjs')
+const routesBabelLoader = resolve(__dirname, 'babel.cjs')
+console.log(routesLoader)
 
 const PLUGIN = 'ROUTES_PLUGIN'
 
 export class RoutesWebpackPlugin {
   _generated = false
   apply(compiler: webpack.Compiler) {
-    console.log(PLUGIN)
     const page = new PageContext({ resolver: 'react' })
 
     console.log(process.cwd())
@@ -20,6 +26,30 @@ export class RoutesWebpackPlugin {
     if (!compiler.options.resolve) {
       compiler.options.resolve = {}
     }
+    compiler.options.module.rules.push({
+      include(resource) {
+        return VIRTUAL_ROUTES_ID_TEST.test(resource)
+      },
+      enforce: 'pre',
+      use: [
+        {
+          loader: 'babel-loader',
+          options: {
+            plugins: [routesBabelLoader],
+          },
+        },
+        {
+          loader: routesLoader,
+        },
+      ],
+    })
+
+    compiler.hooks.compilation.tap(PLUGIN, async compiliation => {
+      console.log(path.resolve(process.cwd(), 'src/pages'));
+      compiliation.contextDependencies.add(path.resolve(process.cwd(), 'src/pages'));
+    })
+
+    console.log(compiler.options.module.rules)
 
     // setup alias
     compiler.options.resolve.alias = {
@@ -48,7 +78,6 @@ export class RoutesWebpackPlugin {
       console.log('beforeCompile')
       await page.searchGlob()
       const routes = await page.resolveRoutes()
-      console.log(routes)
       virtualModules.writeModule('virtual/routes.ts', routes)
       this._generated = true
     })

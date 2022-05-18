@@ -4,15 +4,28 @@ import { PageContext } from 'vite-plugin-pages'
 import VirtualModulesPlugin from 'webpack-virtual-modules'
 import { resolve } from 'pathe'
 import chokidar from 'chokidar'
+import { createFilteredWatchFileSystem } from './wfs'
+import Debug from 'debug'
 
 import { VIRTUAL_ROUTES_ID_TEST } from './constants'
 import path from 'path'
 
 const routesLoader = resolve(__dirname, 'loader.cjs')
-
+const logger = Debug('webpack-plugin-routes')
 const PLUGIN = 'ROUTES_PLUGIN'
 
 export class RoutesWebpackPlugin {
+  vm: VirtualModulesPlugin
+  private _watchRunPatched: WeakSet<webpack.Compiler> = new WeakSet();
+  constructor() {
+    this.vm = new VirtualModulesPlugin({
+      'virtual-react-pages.ts': `
+      const routes = []
+      export default routes;
+      `,
+    })
+  }
+
   apply(compiler: webpack.Compiler) {
     const page = new PageContext({ resolver: 'react', extensions: ['ts', 'tsx', 'js', 'jsx'] })
     // TODO: root should as same as page.root
@@ -51,14 +64,11 @@ export class RoutesWebpackPlugin {
     // setup alias
     compiler.options.resolve.alias = {
       ...compiler.options.resolve.alias,
-      'virtual/react-pages': resolve(compiler.context, 'virtual/react-pages.ts'),
+      'virtual-react-pages': resolve(compiler.context, 'virtual-react-pages.ts'),
     }
 
-    const virtualModules = new VirtualModulesPlugin({
-      'virtual/react-pages.ts': '',
-    })
     // Applying a webpack compiler to the virtual module
-    virtualModules.apply(compiler)
+    this.vm.apply(compiler)
 
     compiler.hooks.beforeCompile.tap(PLUGIN, async () => {
       // fs watcher unlink run after searchGlob
@@ -66,8 +76,14 @@ export class RoutesWebpackPlugin {
       page.pageRouteMap.clear()
       await page.searchGlob()
       const routes = await page.resolveRoutes()
-      console.log('before compile')
-      virtualModules.writeModule('virtual/react-pages.ts', routes)
+      logger('before compile')
+      this.vm.writeModule('virtual/react-pages.ts', routes)
     })
+
+    // related to pr: https://github.com/sysgears/webpack-virtual-modules/pull/129/files
+    if (!this._watchRunPatched.has(compiler)) {
+      compiler.watchFileSystem = createFilteredWatchFileSystem(compiler.watchFileSystem as any)
+      this._watchRunPatched.add(compiler);
+    }
   }
 }

@@ -3,17 +3,15 @@ import type webpack from 'webpack'
 import { PageContext } from 'vite-plugin-pages'
 import VirtualModulesPlugin from 'webpack-virtual-modules'
 import { resolve } from 'pathe'
-// import chokidar from 'chokidar'
 import { createFilteredWatchFileSystem } from './wfs'
-import Debug from 'debug'
+import { logger } from './utils'
 
 import { VIRTUAL_ROUTES_ID_TEST } from './constants'
 
 const routesLoader = resolve(__dirname, 'loader.cjs')
-const logger = Debug('webpack-plugin-routes')
 const PLUGIN = 'WEBAPCK_PLUGIN_PAGES'
 
-export class RoutesWebpackPlugin {
+export class WebpackPluginPages {
   vm: VirtualModulesPlugin
   private _watchRunPatched: WeakSet<webpack.Compiler> = new WeakSet()
   constructor() {
@@ -27,17 +25,6 @@ export class RoutesWebpackPlugin {
 
   apply(compiler: webpack.Compiler) {
     const page = new PageContext({ resolver: 'react', extensions: ['ts', 'tsx', 'js', 'jsx'] })
-    // TODO: root should as same as page.root
-    // this is not make sense
-    // const watcher = chokidar.watch(process.cwd(), {
-    //   ignored: ['**/node_modules/**', '**/.git/**'],
-    //   ignoreInitial: true,
-    //   ignorePermissionErrors: true,
-    //   disableGlobbing: true,
-    // })
-
-    // page.setupWatcher(watcher)
-
     if (!compiler.options.resolve) {
       compiler.options.resolve = {}
     }
@@ -67,8 +54,9 @@ export class RoutesWebpackPlugin {
       'virtual-react-pages': resolve(compiler.context, 'virtual-react-pages.ts'),
     }
 
+    // webpack-virtual-modules include wrong webpack types directly
     // Applying a webpack compiler to the virtual module
-    this.vm.apply(compiler)
+    this.vm.apply(compiler as any)
 
     compiler.hooks.beforeCompile.tap(PLUGIN, async () => {
       // fs watcher unlink run after searchGlob

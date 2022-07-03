@@ -24,7 +24,7 @@ export default defineConfig([
         devDeps: false,
       }),
       esbuild({
-        target: 'es2017',
+        target: 'es2020',
       }),
       commonjs(),
       alias({

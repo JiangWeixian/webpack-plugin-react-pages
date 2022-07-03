@@ -1,7 +1,9 @@
+// refs: https://github.com/sysgears/webpack-virtual-modules/pull/129
 // @ts-nocheck
 import type { Watcher, NodeWatchFileSystem } from './types'
 // eslint-disable-next-line import/no-extraneous-dependencies -- rollup will bundle this package
 import debounce from 'lodash/debounce'
+import { logger } from './utils'
 
 let count = 0
 
@@ -30,7 +32,7 @@ export function createFilteredWatchFileSystem(wfs: NodeWatchFileSystem): typeof 
         })
       }
       count += 1
-      console.log(count)
+      logger('rebuilds %s', count)
       return changes.size + removals.size > 0
     }
 

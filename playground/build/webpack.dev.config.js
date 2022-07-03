@@ -90,16 +90,16 @@ const dev = {
     new webpack.HotModuleReplacementPlugin(),
     new RefreshPlugin(),
     new WebpackBar(),
-    // new FriendlyErrorsPlugin({
-    //   compilationSuccessInfo: {
-    //     messages: [`Running here http://localhost:${port}`],
-    //     notes: ['Happy coding'],
-    //   },
-    //   onErrors(_severity, _errors) {
-    //     // You can listen to errors transformed and prioritized by the plugin
-    //     // severity can be 'error' or 'warning'
-    //   },
-    // }),
+    new FriendlyErrorsPlugin({
+      compilationSuccessInfo: {
+        messages: [`Running here http://localhost:${port}`],
+        notes: ['Happy coding'],
+      },
+      onErrors(_severity, _errors) {
+        // You can listen to errors transformed and prioritized by the plugin
+        // severity can be 'error' or 'warning'
+      },
+    }),
   ],
 }
 

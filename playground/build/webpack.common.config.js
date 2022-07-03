@@ -1,5 +1,4 @@
-// const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
-const { RoutesWebpackPlugin } = require('webpack-plugin-routes')
+const { WebpackPluginPages } = require('webpack-plugin-pages')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 const configs = require('./config')
@@ -63,13 +62,7 @@ const common = {
         },
       ],
     }),
-    new RoutesWebpackPlugin(),
-    // new ForkTsCheckerWebpackPlugin({
-    //   typescript: {
-    //     configFile: configs.path.tsconfig,
-    //   },
-    //   async: true,
-    // }),
+    new WebpackPluginPages(),
   ],
 }
 

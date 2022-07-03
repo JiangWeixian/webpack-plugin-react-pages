@@ -5,7 +5,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCSSExtractPlugin = require('mini-css-extract-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const PreloadWebpackPlugin = require('@vue/preload-webpack-plugin')
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 const CompressionPlugin = require('compression-webpack-plugin')
 const SizePlugin = require('size-plugin')
 const WebpackBar = require('webpackbar')
@@ -127,14 +126,6 @@ const prod = {
       filename: path.posix.join('static', 'css/[name].[contenthash].css'),
       chunkFilename: path.posix.join('static', 'css/[name].[contenthash].async.css'),
     }),
-
-    ...(configs.analyzer
-      ? [
-          new BundleAnalyzerPlugin({
-            openAnalyzer: true,
-          }),
-        ]
-      : []),
     new CompressionPlugin(),
     new SizePlugin({
       writeFile: false,

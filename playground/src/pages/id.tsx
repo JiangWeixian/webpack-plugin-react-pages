@@ -1,13 +1,7 @@
 import React from 'react'
 
-import Counter from '@/components/Counter/Count'
-
-const Post = () => {
-  return (
-    <div className="flex flex-col justify-center items-center h-full">
-      <Counter />
-    </div>
-  )
+const Home = () => {
+  return <div className="flex-1 hero bg-base-200 overflow-auto">id</div>
 }
 
-export default Post
+export default Home

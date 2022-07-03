@@ -1,6 +1,6 @@
 import resolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
-import typescript from 'rollup-plugin-typescript2'
+import esbuild from 'rollup-plugin-esbuild'
 import { externals } from 'rollup-plugin-node-externals'
 import alias from '@rollup/plugin-alias'
 import size from 'rollup-plugin-size'
@@ -23,7 +23,9 @@ export default defineConfig([
       externals({
         devDeps: false,
       }),
-      typescript(),
+      esbuild({
+        target: 'es2017',
+      }),
       commonjs(),
       alias({
         resolve: ['.ts', '.js', '.tsx', '.jsx'],

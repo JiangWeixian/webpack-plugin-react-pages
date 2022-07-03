@@ -11,7 +11,7 @@ import { VIRTUAL_ROUTES_ID_TEST } from './constants'
 const routesLoader = resolve(__dirname, 'loader.cjs')
 const PLUGIN = 'WEBAPCK_PLUGIN_PAGES'
 
-export class WebpackPluginPages {
+export class WebpackPluginRoutes {
   vm: VirtualModulesPlugin
   private _watchRunPatched: WeakSet<webpack.Compiler> = new WeakSet()
   constructor() {

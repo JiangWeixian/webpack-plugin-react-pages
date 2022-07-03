@@ -1,4 +1,4 @@
-const { WebpackPluginPages } = require('webpack-plugin-pages')
+const { WebpackPluginPages } = require('webpack-plugin-routes')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 const configs = require('./config')

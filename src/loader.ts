@@ -1,10 +1,10 @@
 import type webpack from 'webpack'
-import { VIRTUAL_ROUTES_ID_TEST } from './constants'
+import { VIRTUAL_PAGES_ID_TEST } from './constants'
 
 async function RoutesLoader(this: webpack.LoaderContext<any>, source: string) {
   const callback = this.async()
   this.cacheable(false)
-  const match = this.resource.match(new RegExp(VIRTUAL_ROUTES_ID_TEST))
+  const match = this.resource.match(new RegExp(VIRTUAL_PAGES_ID_TEST))
 
   if (!match) {
     callback(null, source)

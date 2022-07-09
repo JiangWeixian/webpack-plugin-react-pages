@@ -7,7 +7,7 @@ import { resolve } from 'pathe'
 import { createFilteredWatchFileSystem } from './wfs'
 import { logger } from './utils'
 
-import { VIRTUAL_ROUTES_ID_TEST } from './constants'
+import { VIRTUAL_PAGES_ID, VIRTUAL_PAGES_ID_TEST, VIRTUAL_PAGES_ID_ALIAS } from './constants'
 
 const routesLoader = resolve(__dirname, 'loader.cjs')
 const PLUGIN = 'WEBAPCK_PLUGIN_REACT_PAGES'
@@ -18,7 +18,7 @@ export class WebpackPluginReactPages {
   private _watchRunPatched: WeakSet<webpack.Compiler> = new WeakSet()
   constructor() {
     this.vm = new VirtualModulesPlugin({
-      'virtual-react-pages.ts': `
+      VIRTUAL_PAGES_ID: `
       const routes = []
       export default routes;
       `,
@@ -35,7 +35,7 @@ export class WebpackPluginReactPages {
     }
     compiler.options.module.rules.push({
       include(resource) {
-        return VIRTUAL_ROUTES_ID_TEST.test(resource)
+        return VIRTUAL_PAGES_ID_TEST.test(resource)
       },
       enforce: 'pre',
       use: [
@@ -56,7 +56,7 @@ export class WebpackPluginReactPages {
     // setup alias
     compiler.options.resolve.alias = {
       ...compiler.options.resolve.alias,
-      'virtual-react-pages': resolve(compiler.context, 'virtual-react-pages.ts'),
+      [VIRTUAL_PAGES_ID_ALIAS]: resolve(compiler.context, VIRTUAL_PAGES_ID),
     }
 
     // webpack-virtual-modules include wrong webpack types directly
@@ -71,7 +71,7 @@ export class WebpackPluginReactPages {
       await page.searchGlob()
       const routes = await page.resolveRoutes()
       logger('before compile')
-      this.vm.writeModule('virtual-react-pages.ts', routes)
+      this.vm.writeModule(VIRTUAL_PAGES_ID, routes)
     })
 
     // related to pr: https://github.com/sysgears/webpack-virtual-modules/pull/129/files

@@ -163,7 +163,7 @@ importers:
       webpack-cli: 4.10.0
       webpack-dev-server: 4.8.1
       webpack-merge: 5.8.0
-      webpack-plugin-routes: workspace:^0.0.0
+      webpack-plugin-react-pages: workspace:^0.0.0
       webpackbar: 5.0.2
     dependencies:
       '@rematch/core': 2.2.0_redux@4.1.2
@@ -177,7 +177,7 @@ importers:
       react-router-dom: 6.3.0_zpnidt7m3osuk7shl3s4oenomq
       redux: 4.1.2
       swr: 1.3.0_react@18.0.0
-      webpack-plugin-routes: link:..
+      webpack-plugin-react-pages: link:..
     devDependencies:
       '@aiou/eslint-config': 0.5.1_6ekfr45vvgvmp233n2bwogrswm
       '@babel/core': 7.17.9

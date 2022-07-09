@@ -1,4 +1,5 @@
 import type webpack from 'webpack'
+import { NormalModuleReplacementPlugin } from 'webpack'
 // eslint-disable-next-line import/no-extraneous-dependencies -- rollup will bundle this package
 import { PageContext } from 'vite-plugin-pages'
 import VirtualModulesPlugin from 'webpack-virtual-modules'
@@ -9,10 +10,11 @@ import { logger } from './utils'
 import { VIRTUAL_ROUTES_ID_TEST } from './constants'
 
 const routesLoader = resolve(__dirname, 'loader.cjs')
-const PLUGIN = 'WEBAPCK_PLUGIN_PAGES'
+const PLUGIN = 'WEBAPCK_PLUGIN_REACT_PAGES'
 
-export class WebpackPluginRoutes {
+export class WebpackPluginReactPages {
   vm: VirtualModulesPlugin
+  nmp: NormalModuleReplacementPlugin
   private _watchRunPatched: WeakSet<webpack.Compiler> = new WeakSet()
   constructor() {
     this.vm = new VirtualModulesPlugin({
@@ -20,6 +22,9 @@ export class WebpackPluginRoutes {
       const routes = []
       export default routes;
       `,
+    })
+    this.nmp = new NormalModuleReplacementPlugin(/^virtual:react-pages/, (resource) => {
+      resource.request = 'virtual-react-pages'
     })
   }
 
@@ -57,6 +62,7 @@ export class WebpackPluginRoutes {
     // webpack-virtual-modules include wrong webpack types directly
     // Applying a webpack compiler to the virtual module
     this.vm.apply(compiler as any)
+    this.nmp.apply(compiler)
 
     compiler.hooks.beforeCompile.tap(PLUGIN, async () => {
       // fs watcher unlink run after searchGlob

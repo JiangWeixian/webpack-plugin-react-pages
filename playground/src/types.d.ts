@@ -1,1 +1,1 @@
-declare module 'virtual-react-pages'
+declare module 'virtual:react-pages'

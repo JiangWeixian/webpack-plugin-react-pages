@@ -1,17 +1,17 @@
 {
-  "name": "webpack-plugin-routes",
+  "name": "webpack-plugin-react-pages",
   "version": "0.0.0",
   "license": "MIT",
   "engines": {
     "node": ">=14"
   },
-  "homepage": "https://github.com/jiangWeixian/webpack-plugin-routes#readme",
+  "homepage": "https://github.com/jiangWeixian/webpack-plugin-react-pages#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jiangWeixian/webpack-plugin-routes.git"
+    "url": "git+https://github.com/jiangWeixian/webpack-plugin-react-pages.git"
   },
   "bugs": {
-    "url": "https://github.com/jiangWeixian/webpack-plugin-routes/issues",
+    "url": "https://github.com/jiangWeixian/webpack-plugin-react-pages/issues",
     "email": "jiangweixian1994@gmail.com"
   },
   "author": {

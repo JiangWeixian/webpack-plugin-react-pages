@@ -69,6 +69,14 @@
     "react-router-dom": ">=6",
     "webpack": "5.x"
   },
+  "peerDependenciesMeta": {
+    "react-router": {
+      "optional": true
+    },
+    "react-router-dom": {
+      "optional": true
+    }
+  },
   "dependencies": {
     "debug": "^4.3.4",
     "pathe": "^0.2.0",

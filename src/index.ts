@@ -1,9 +1,10 @@
-import type webpack from 'webpack'
 import { NormalModuleReplacementPlugin } from 'webpack'
 // eslint-disable-next-line import/no-extraneous-dependencies -- rollup will bundle this package
 import { PageContext } from 'vite-plugin-pages'
 import VirtualModulesPlugin from 'webpack-virtual-modules'
 import { resolve } from 'pathe'
+
+import { Compiler } from './types'
 import { createFilteredWatchFileSystem } from './wfs'
 import { logger } from './utils'
 
@@ -11,25 +12,29 @@ import { VIRTUAL_PAGES_ID, VIRTUAL_PAGES_ID_TEST, VIRTUAL_PAGES_ID_ALIAS } from 
 
 const routesLoader = resolve(__dirname, 'loader.cjs')
 const PLUGIN = 'WEBAPCK_PLUGIN_REACT_PAGES'
+const template = `
+const routes = []
+export default routes;
+`
 
 export class WebpackPluginReactPages {
   vm: VirtualModulesPlugin
   nmp: NormalModuleReplacementPlugin
-  private _watchRunPatched: WeakSet<webpack.Compiler> = new WeakSet()
+  page: PageContext
+  private _watchRunPatched: WeakSet<Compiler> = new WeakSet()
   constructor() {
     this.vm = new VirtualModulesPlugin({
-      VIRTUAL_PAGES_ID: `
-      const routes = []
-      export default routes;
-      `,
+      VIRTUAL_PAGES_ID: template,
     })
+    // support `virtual:` protocol
     this.nmp = new NormalModuleReplacementPlugin(/^virtual:react-pages/, (resource) => {
       resource.request = 'virtual-react-pages'
     })
+    this.page = new PageContext({ resolver: 'react', extensions: ['ts', 'tsx', 'js', 'jsx'] })
   }
 
-  apply(compiler: webpack.Compiler) {
-    const page = new PageContext({ resolver: 'react', extensions: ['ts', 'tsx', 'js', 'jsx'] })
+  apply(compiler: Compiler) {
+    compiler.$page = this.page
     if (!compiler.options.resolve) {
       compiler.options.resolve = {}
     }
@@ -47,8 +52,8 @@ export class WebpackPluginReactPages {
 
     // rollup typo
     compiler.hooks.compilation.tap(PLUGIN, async (compilation: any) => {
-      for (const dir of page.options.dirs) {
-        logger(dir)
+      for (const dir of this.page.options.dirs) {
+        logger('page dirs', dir)
         compilation.contextDependencies.add(resolve(compiler.context, dir.dir))
       }
     })
@@ -64,14 +69,8 @@ export class WebpackPluginReactPages {
     this.vm.apply(compiler as any)
     this.nmp.apply(compiler)
 
-    compiler.hooks.beforeCompile.tap(PLUGIN, async () => {
-      // fs watcher unlink run after searchGlob
-      // always generate new page route Map
-      page.pageRouteMap.clear()
-      await page.searchGlob()
-      const routes = await page.resolveRoutes()
-      logger('before compile')
-      this.vm.writeModule(VIRTUAL_PAGES_ID, routes)
+    compiler.hooks.compilation.tap(PLUGIN, () => {
+      this.vm.writeModule(VIRTUAL_PAGES_ID, template)
     })
 
     // related to pr: https://github.com/sysgears/webpack-virtual-modules/pull/129/files

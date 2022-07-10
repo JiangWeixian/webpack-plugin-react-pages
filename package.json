@@ -25,11 +25,25 @@
       "require": "./dist/index.cjs",
       "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs"
+    },
+    "./shim": {
+      "types": "./shim.d.ts"
     }
   },
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "./shim.d.ts"
+  ],
+  "typesVersions": {
+    "*": {
+      "shim": [
+        "./shim.d.ts"
+      ]
+    }
+  },
   "scripts": {
     "build:lib": "rollup -c --silent",
     "build:dts": "tsc",
@@ -51,12 +65,14 @@
     ]
   },
   "peerDependencies": {
+    "react-router": ">=6",
+    "react-router-dom": ">=6",
     "webpack": "5.x"
   },
   "dependencies": {
     "debug": "^4.3.4",
     "pathe": "^0.2.0",
-    "webpack-virtual-modules": "0.4.2"
+    "webpack-virtual-modules": "^0.4.2"
   },
   "devDependencies": {
     "@aiou/eslint-config": "^0.5.1",
@@ -78,10 +94,10 @@
     "lint-staged": "^11.2.6",
     "lodash": "^4.17.21",
     "prettier": "2.4.1",
+    "react-router": "6.3.0",
     "rimraf": "3.0.2",
     "rollup": "2.72.1",
     "rollup-plugin-bundle-size": "^1.0.3",
-    "rollup-plugin-condition-exports": "^1.4.1",
     "rollup-plugin-esbuild": "^4.9.1",
     "rollup-plugin-node-externals": "^4.0.0",
     "rollup-plugin-size": "^0.2.2",

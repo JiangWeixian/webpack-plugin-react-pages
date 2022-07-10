@@ -4,7 +4,6 @@ import esbuild from 'rollup-plugin-esbuild'
 import { externals } from 'rollup-plugin-node-externals'
 import alias from '@rollup/plugin-alias'
 import size from 'rollup-plugin-size'
-import ce from 'rollup-plugin-condition-exports'
 import { defineConfig } from 'rollup'
 
 export default defineConfig([
@@ -36,7 +35,6 @@ export default defineConfig([
        * Auto setup package.json
        * @see {@link https://github.com/JiangWeixian/rollup-plugin-condition-exports}
        */
-      ce({ names: ['index'] }),
       size(),
     ],
     output: [

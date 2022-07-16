@@ -34,7 +34,7 @@ export class WebpackPluginReactPages {
   constructor({
     extensions = ['ts', 'tsx', 'js', 'jsx'],
     ...options
-  }: WebpackPluginReactPagesOptions) {
+  }: WebpackPluginReactPagesOptions = {}) {
     this.vm = new VirtualModulesPlugin({
       VIRTUAL_PAGES_ID: template,
     })

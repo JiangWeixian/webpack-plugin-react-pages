@@ -19,6 +19,7 @@
     "noImplicitThis": true,
     "noImplicitReturns": true,
     "suppressImplicitAnyIndexErrors": true,
+    "types": ["webpack-plugin-react-pages/shim"],
     "baseUrl": ".",
     "skipLibCheck": true,
     "paths": {

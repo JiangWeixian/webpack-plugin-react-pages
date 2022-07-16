@@ -1,37 +1,64 @@
-import type webpack from 'webpack'
+import { NormalModuleReplacementPlugin } from 'webpack'
 // eslint-disable-next-line import/no-extraneous-dependencies -- rollup will bundle this package
 import { PageContext } from 'vite-plugin-pages'
+import type { UserOptions, PageResolver } from 'vite-plugin-pages'
 import VirtualModulesPlugin from 'webpack-virtual-modules'
 import { resolve } from 'pathe'
-import chokidar from 'chokidar'
 
-import { VIRTUAL_ROUTES_ID_TEST } from './constants'
-import path from 'path'
+import { Compiler } from './types'
+import { createFilteredWatchFileSystem } from './wfs'
+import { logger } from './utils'
+
+import { VIRTUAL_PAGES_ID, VIRTUAL_PAGES_ID_TEST, VIRTUAL_PAGES_ID_ALIAS } from './constants'
 
 const routesLoader = resolve(__dirname, 'loader.cjs')
+const PLUGIN = 'WEBAPCK_PLUGIN_REACT_PAGES'
+const template = `
+const routes = []
+export default routes;
+`
 
-const PLUGIN = 'ROUTES_PLUGIN'
+type WebpackPluginReactPagesOptions = Omit<
+  UserOptions,
+  // omit deprecated options, omit non-react-resolver only support react framework
+  'pagesDir' | 'replaceSquareBrackets' | 'nuxtStyle' | 'syncIndex' | 'moduleId' | 'resolver'
+> & {
+  resolver?: PageResolver
+}
 
-export class RoutesWebpackPlugin {
-  apply(compiler: webpack.Compiler) {
-    const page = new PageContext({ resolver: 'react', extensions: ['ts', 'tsx', 'js', 'jsx'] })
-    // TODO: root should as same as page.root
-    // this is not make sense
-    const watcher = chokidar.watch(process.cwd(), {
-      ignored: ['**/node_modules/**', '**/.git/**'],
-      ignoreInitial: true,
-      ignorePermissionErrors: true,
-      disableGlobbing: true,
+export class WebpackPluginReactPages {
+  vm: VirtualModulesPlugin
+  nmp: NormalModuleReplacementPlugin
+  page: PageContext
+  private _watchRunPatched: WeakSet<Compiler> = new WeakSet()
+  constructor({
+    extensions = ['ts', 'tsx', 'js', 'jsx'],
+    routeStyle = 'remix',
+    ...options
+  }: WebpackPluginReactPagesOptions = {}) {
+    this.vm = new VirtualModulesPlugin({
+      VIRTUAL_PAGES_ID: template,
     })
+    // support `virtual:` protocol
+    this.nmp = new NormalModuleReplacementPlugin(/^virtual:react-pages/, (resource) => {
+      resource.request = 'virtual-react-pages'
+    })
+    this.page = new PageContext({
+      extensions,
+      routeStyle,
+      resolver: 'react',
+      ...options,
+    })
+  }
 
-    page.setupWatcher(watcher)
-
+  apply(compiler: Compiler) {
+    compiler.$page = this.page
     if (!compiler.options.resolve) {
       compiler.options.resolve = {}
     }
     compiler.options.module.rules.push({
       include(resource) {
-        return VIRTUAL_ROUTES_ID_TEST.test(resource)
+        return VIRTUAL_PAGES_ID_TEST.test(resource)
       },
       enforce: 'pre',
       use: [
@@ -43,31 +70,31 @@ export class RoutesWebpackPlugin {
 
     // rollup typo
     compiler.hooks.compilation.tap(PLUGIN, async (compilation: any) => {
-      for (const dir of page.options.dirs) {
-        compilation.contextDependencies.add(path.resolve(process.cwd(), dir.dir))
+      for (const dir of this.page.options.dirs) {
+        logger('page dirs', dir)
+        compilation.contextDependencies.add(resolve(compiler.context, dir.dir))
       }
     })
 
     // setup alias
     compiler.options.resolve.alias = {
       ...compiler.options.resolve.alias,
-      'virtual/react-pages': resolve(compiler.context, 'virtual/react-pages.ts'),
+      [VIRTUAL_PAGES_ID_ALIAS]: resolve(compiler.context, VIRTUAL_PAGES_ID),
     }
 
-    const virtualModules = new VirtualModulesPlugin({
-      'virtual/react-pages.ts': '',
-    })
+    // webpack-virtual-modules include webpack@v4 types directly
     // Applying a webpack compiler to the virtual module
-    virtualModules.apply(compiler)
+    this.vm.apply(compiler as any)
+    this.nmp.apply(compiler)
 
-    compiler.hooks.beforeCompile.tap(PLUGIN, async () => {
-      // fs watcher unlink run after searchGlob
-      // always generate new page route Map
-      page.pageRouteMap.clear()
-      await page.searchGlob()
-      const routes = await page.resolveRoutes()
-      console.log('before compile')
-      virtualModules.writeModule('virtual/react-pages.ts', routes)
+    compiler.hooks.compilation.tap(PLUGIN, () => {
+      this.vm.writeModule(VIRTUAL_PAGES_ID, template)
     })
+
+    // related to pr: https://github.com/sysgears/webpack-virtual-modules/pull/129/files
+    if (!this._watchRunPatched.has(compiler)) {
+      compiler.watchFileSystem = createFilteredWatchFileSystem(compiler.watchFileSystem as any)
+      this._watchRunPatched.add(compiler)
+    }
   }
 }

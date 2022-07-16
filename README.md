@@ -1,31 +1,60 @@
-# webpack-plugin-routes
-*webpack-plugin-routes for single lib in unbundle mode*
+# webpack-plugin-react-pages
+> Webpack plugin port of [vite-plugin-pages](https://github.com/hannoeru/vite-plugin-pages)
 
-[![npm](https://img.shields.io/npm/v/webpack-plugin-routes)](https://github.com/jiangWeixian/webpack-plugin-routes) [![GitHub](https://img.shields.io/npm/l/webpack-plugin-routes)](https://github.com/jiangWeixian/webpack-plugin-routes) [![stackblitz](https://img.shields.io/badge/%E2%9A%A1%EF%B8%8Fstackblitz-online-blue)](https://stackblitz.com/github/jiangWeixian/webpack-plugin-routes)
-
-[Edit on StackBlitz ⚡️](https://stackblitz.com/github/jiangWeixian/webpack-plugin-routes)
-
-## features
-
-- 📊 Stats - output bag bundlesize
-- 📦 exclude `dependencies` and `peerDependencies`
-- 💪 Typescript - type safe
+*Only support react, check playground for more details. Plugin use remix route style by default.*
 
 ## install
 
 ```console
-pnpm add webpack-plugin-routes
+pnpm i webpack-plugin-react-pages react-router react-router-dom
 ```
 
-## development
+## usage
 
-- **Setup** - `pnpm i`
-- **Build** - `pnpm build`
+```js
+const { WebpackPluginReactPages } = require('webpack-plugin-react-pages')
 
-# 
-<div align='right'>
+// in webpack.config.js
+{
+  plugins: [
+    // ...
+    new WebpackPluginReactPages(),
+  ],
+}
+```
 
-*built with ❤️ by 😼*
+Then, import `virutal:react-pages` module in project
 
-</div>
+```ts
+import React, { Suspense } from 'react'
+import { BrowserRouter, useRoutes } from 'react-router-dom'
+import routes from 'virtual:react-pages'
+
+const Routes = () => {
+  const element = useRoutes(routes)
+  return element
+}
+
+const RouterViewer = () => {
+  return (
+    <BrowserRouter>
+      <Suspense fallback={<div>loading</div>}>
+        <Routes />
+      </Suspense>
+    </BrowserRouter>
+  )
+}
+
+export default RouterViewer
+```
+
+### TypeScript
+
+make `virutal:react-pages` type safe.
+
+```json
+{
+  "types": ["webpack-plugin-react-pages/shim"]
+}
+```
 

@@ -67,7 +67,7 @@
   "peerDependencies": {
     "react-router": ">=6",
     "react-router-dom": ">=6",
-    "webpack": "5.x"
+    "webpack": ">=5"
   },
   "peerDependenciesMeta": {
     "react-router": {

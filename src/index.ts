@@ -1,6 +1,7 @@
 import { NormalModuleReplacementPlugin } from 'webpack'
 // eslint-disable-next-line import/no-extraneous-dependencies -- rollup will bundle this package
 import { PageContext } from 'vite-plugin-pages'
+import type { UserOptions, PageResolver } from 'vite-plugin-pages'
 import VirtualModulesPlugin from 'webpack-virtual-modules'
 import { resolve } from 'pathe'
 
@@ -17,12 +18,23 @@ const routes = []
 export default routes;
 `
 
+type WebpackPluginReactPagesOptions = Omit<
+  UserOptions,
+  // omit deprecated options, omit non-react-resolver only support react framework
+  'pagesDir' | 'replaceSquareBrackets' | 'nuxtStyle' | 'syncIndex' | 'moduleId' | 'resolver'
+> & {
+  resolver?: PageResolver
+}
+
 export class WebpackPluginReactPages {
   vm: VirtualModulesPlugin
   nmp: NormalModuleReplacementPlugin
   page: PageContext
   private _watchRunPatched: WeakSet<Compiler> = new WeakSet()
-  constructor() {
+  constructor({
+    extensions = ['ts', 'tsx', 'js', 'jsx'],
+    ...options
+  }: WebpackPluginReactPagesOptions) {
     this.vm = new VirtualModulesPlugin({
       VIRTUAL_PAGES_ID: template,
     })
@@ -30,7 +42,11 @@ export class WebpackPluginReactPages {
     this.nmp = new NormalModuleReplacementPlugin(/^virtual:react-pages/, (resource) => {
       resource.request = 'virtual-react-pages'
     })
-    this.page = new PageContext({ resolver: 'react', extensions: ['ts', 'tsx', 'js', 'jsx'] })
+    this.page = new PageContext({
+      extensions,
+      resolver: 'react',
+      ...options,
+    })
   }
 
   apply(compiler: Compiler) {
@@ -64,7 +80,7 @@ export class WebpackPluginReactPages {
       [VIRTUAL_PAGES_ID_ALIAS]: resolve(compiler.context, VIRTUAL_PAGES_ID),
     }
 
-    // webpack-virtual-modules include wrong webpack types directly
+    // webpack-virtual-modules include webpack@v4 types directly
     // Applying a webpack compiler to the virtual module
     this.vm.apply(compiler as any)
     this.nmp.apply(compiler)

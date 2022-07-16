@@ -1,7 +1,7 @@
 # webpack-plugin-react-pages
 > Webpack plugin port of [vite-plugin-pages](https://github.com/hannoeru/vite-plugin-pages)
 
-*Only support react, check playground for more details*
+*Only support react, check playground for more details. Plugin use remix route style by default.*
 
 ## install
 

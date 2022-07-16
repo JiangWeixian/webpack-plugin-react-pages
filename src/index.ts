@@ -33,6 +33,7 @@ export class WebpackPluginReactPages {
   private _watchRunPatched: WeakSet<Compiler> = new WeakSet()
   constructor({
     extensions = ['ts', 'tsx', 'js', 'jsx'],
+    routeStyle = 'remix',
     ...options
   }: WebpackPluginReactPagesOptions = {}) {
     this.vm = new VirtualModulesPlugin({
@@ -44,6 +45,7 @@ export class WebpackPluginReactPages {
     })
     this.page = new PageContext({
       extensions,
+      routeStyle,
       resolver: 'react',
       ...options,
     })

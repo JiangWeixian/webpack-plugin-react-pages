@@ -1,7 +1,11 @@
 import { NormalModuleReplacementPlugin } from 'webpack'
 // eslint-disable-next-line import/no-extraneous-dependencies -- rollup will bundle this package
 import { PageContext } from 'vite-plugin-pages'
-import type { UserOptions, PageResolver } from 'vite-plugin-pages'
+import type {
+  UserOptions,
+  PageResolver,
+  PageContext as PageContextImpl,
+} from './vite-plugin-pages-types'
 import VirtualModulesPlugin from 'webpack-virtual-modules'
 import { resolve } from 'pathe'
 
@@ -29,7 +33,7 @@ type WebpackPluginReactPagesOptions = Omit<
 export class WebpackPluginReactPages {
   vm: VirtualModulesPlugin
   nmp: NormalModuleReplacementPlugin
-  page: PageContext
+  page: PageContextImpl
   private _watchRunPatched: WeakSet<Compiler> = new WeakSet()
   constructor({
     extensions = ['ts', 'tsx', 'js', 'jsx'],
@@ -48,7 +52,8 @@ export class WebpackPluginReactPages {
       routeStyle,
       resolver: 'react',
       ...options,
-    })
+      // TODO: type safe
+    } as any) as any
   }
 
   apply(compiler: Compiler) {

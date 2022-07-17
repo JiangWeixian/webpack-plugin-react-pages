@@ -3,6 +3,8 @@
 
 *Only support react, check playground for more details. Plugin use remix route style by default.*
 
+[![npm](https://img.shields.io/npm/v/webpack-plugin-react-pages)](https://github.com/JiangWeixian/webpack-plugin-react-pages/tree/master) [![GitHub](https://img.shields.io/npm/l/webpack-plugin-react-pages)](https://github.com/JiangWeixian/webpack-plugin-react-pages/tree/master)
+
 ## install
 
 ```console

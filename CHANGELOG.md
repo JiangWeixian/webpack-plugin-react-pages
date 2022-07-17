@@ -1,5 +1,11 @@
 # webpack-plugin-react-pages
 
+## 0.1.2
+
+### Patch Changes
+
+- b15eaf3: fork vite-plugin-pages types define for type safe
+
 ## 0.1.1
 
 ### Patch Changes

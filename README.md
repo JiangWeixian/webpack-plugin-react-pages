@@ -77,4 +77,4 @@ make `virutal:react-pages` type safe.
 
 `webpack-plugin-react-pages` also built-in custom resolvers
 
-- [nextEnhancedResolver](./docs/next-enhanced-resolver.md) - `next.js` route convention mixup `remix` route convention
+- [nextEnhancedResolver](./docs/next-enhanced-resolver.md) - [`next.js`](https://nextjs.org/) route convention mixup [`remix`](https://remix.run/docs/en/v1/guides/routing) route convention

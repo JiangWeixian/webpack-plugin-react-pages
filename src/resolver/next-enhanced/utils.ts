@@ -1,5 +1,5 @@
 import { cacheAllRouteRE, countSlashRE, dynamicRouteRE, replaceDynamicRouteRE } from './constants'
-import type { ResolvedOptions } from '../vite-plugin-pages-types'
+import type { ResolvedOptions } from '../../vite-plugin-pages-types'
 
 export function countSlash(value: string) {
   return (value.match(countSlashRE) || []).length

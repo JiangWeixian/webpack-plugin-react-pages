@@ -1,7 +1,7 @@
 import { resolveImportMode } from './utils'
 import { ROUTE_IMPORT_NAME } from './constants'
 
-import type { ResolvedOptions } from '../vite-plugin-pages-types'
+import type { ResolvedOptions } from '../../vite-plugin-pages-types'
 
 const componentRE = /"(?:component|element)":("(.*?)")/g
 

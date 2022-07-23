@@ -26,6 +26,11 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.mjs"
     },
+    "./resolver": {
+      "require": "./dist/resolver/index.cjs",
+      "types": "./dist/resolver/index.d.ts",
+      "import": "./dist/resolver/index.mjs"
+    },
     "./shim": {
       "types": "./shim.d.ts"
     }
@@ -41,6 +46,9 @@
     "*": {
       "shim": [
         "./shim.d.ts"
+      ],
+      "resolver": [
+        "./dist/resolver/index.d.ts"
       ]
     }
   },

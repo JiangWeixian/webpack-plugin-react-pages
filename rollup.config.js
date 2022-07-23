@@ -14,7 +14,11 @@ export default defineConfig([
   // an array for the `output` option, where we can specify
   // `file` and `format` for each target)
   {
-    input: ['src/index.ts', 'src/loader.ts'],
+    input: {
+      index: 'src/index.ts',
+      loader: 'src/loader.ts',
+      'resolver/index': 'src/resolver/index.ts',
+    },
     plugins: [
       /**
        * Bundle devDependencies, exclude dependencies

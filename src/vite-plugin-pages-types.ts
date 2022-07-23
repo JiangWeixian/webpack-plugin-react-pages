@@ -19,9 +19,11 @@ interface PageOptions {
     baseRoute: string;
 }
 interface PageResolver {
-    resolveModuleIds: () => string[];
+    // NOTE: Not allow custom `virtual-module-name` in webpack-plugin-react-pages currently
+    // resolveModuleIds: () => string[];
     resolveExtensions: () => string[];
     resolveRoutes: (ctx: PageContext) => Awaitable<string>;
+    getComputedRoutes: (ctx: PageContext) => Awaitable<ReactRoute[]>
     stringify?: {
         dynamicImport?: (importPath: string) => string;
         component?: (importName: string) => string;

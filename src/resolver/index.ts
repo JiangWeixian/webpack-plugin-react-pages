@@ -1,4 +1,4 @@
-import { buildReactRemixRoutePath, buildReactRoutePath, countSlash, normalizeCase } from './utils'
+import { buildReactRoutePath, countSlash, normalizeCase } from './utils'
 import { generateClientCode } from './stringify'
 
 import type {
@@ -37,8 +37,7 @@ function prepareRoutes(routes: ReactRoute[], options: ResolvedOptions, parent?: 
 }
 
 async function computeReactRoutes(ctx: PageContext): Promise<ReactRoute[]> {
-  const { routeStyle, caseSensitive } = ctx.options
-  const nuxtStyle = routeStyle === 'nuxt'
+  const { caseSensitive } = ctx.options
 
   const pageRoutes = [...ctx.pageRouteMap.values()]
     // sort routes for HMR
@@ -67,8 +66,7 @@ async function computeReactRoutes(ctx: PageContext): Promise<ReactRoute[]> {
       if (!route.path && isIndexRoute) {
         route.path = '/'
       } else if (!isIndexRoute) {
-        if (routeStyle === 'remix') route.path = buildReactRemixRoutePath(node)
-        else route.path = buildReactRoutePath(node, nuxtStyle)
+        route.path = buildReactRoutePath(node)
       }
 
       // Check parent exits

@@ -1,5 +1,11 @@
 # webpack-plugin-react-pages
 
+## 0.2.0
+
+### Minor Changes
+
+- 28300bd: next enhanced resolver
+
 ## 0.1.2
 
 ### Patch Changes

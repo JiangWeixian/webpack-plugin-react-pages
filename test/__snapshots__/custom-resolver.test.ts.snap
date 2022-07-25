@@ -1,0 +1,16 @@
+// Vitest Snapshot v1
+
+exports[`custom-resolver > next enhanced resolver 1`] = `
+"import React from \\"react\\";
+import __pages_import_0__ from \\"/react/[...all].tsx\\";
+import __pages_import_1__ from \\"/react/__auth.tsx\\";
+import __pages_import_2__ from \\"/react/__auth/login.tsx\\";
+import __pages_import_3__ from \\"/react/index.tsx\\";
+import __pages_import_4__ from \\"/react/user.tsx\\";
+import __pages_import_5__ from \\"/react/user/[id].tsx\\";
+import __pages_import_6__ from \\"/react/user/index.tsx\\";
+
+const routes = [{\\"caseSensitive\\":false,\\"path\\":\\"*\\",\\"element\\":React.createElement(__pages_import_0__)},{\\"caseSensitive\\":false,\\"element\\":React.createElement(__pages_import_1__),\\"children\\":[{\\"caseSensitive\\":false,\\"path\\":\\"login\\",\\"element\\":React.createElement(__pages_import_2__)}]},{\\"caseSensitive\\":false,\\"path\\":\\"/\\",\\"element\\":React.createElement(__pages_import_3__)},{\\"caseSensitive\\":false,\\"path\\":\\"user\\",\\"element\\":React.createElement(__pages_import_4__),\\"children\\":[{\\"caseSensitive\\":false,\\"path\\":\\":id\\",\\"element\\":React.createElement(__pages_import_5__)},{\\"caseSensitive\\":false,\\"path\\":\\"\\",\\"element\\":React.createElement(__pages_import_6__)}]}];
+
+export default routes;"
+`;

@@ -13,19 +13,6 @@ pnpm i webpack-plugin-react-pages react-router react-router-dom
 
 ## usage
 
-Support follow options from [vite-plugin-pages](https://github.com/hannoeru/vite-plugin-pages)
-
-- `resolver`
-- `dirs`
-- `exclude`
-- `importMode`
-- `routeStyle` - `remix` by default
-- `caseSensitive`
-- `routeBlockLang`
-- `extendRoute`
-- `onRoutesGenerated`
-- `onClientGenerated`
-
 ```js
 const { WebpackPluginReactPages } = require('webpack-plugin-react-pages')
 
@@ -62,6 +49,21 @@ const RouterViewer = () => {
 
 export default RouterViewer
 ```
+
+### options
+
+Support follow options from [vite-plugin-pages](https://github.com/hannoeru/vite-plugin-pages)
+
+- `resolver`
+- `dirs`
+- `exclude`
+- `importMode`
+- `routeStyle` - `remix` by default
+- `caseSensitive`
+- `routeBlockLang`
+- `extendRoute`
+- `onRoutesGenerated`
+- `onClientGenerated`
 
 ### TypeScript
 

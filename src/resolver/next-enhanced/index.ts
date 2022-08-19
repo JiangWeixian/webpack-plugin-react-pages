@@ -15,6 +15,8 @@ export interface ReactRouteBase {
   index?: boolean
   path?: string
   rawRoute: string
+  // FIXME:
+  absolutePath?: string
 }
 
 export interface ReactRoute
@@ -34,6 +36,14 @@ function prepareRoutes(routes: ReactRoute[], options: ResolvedOptions, parent?: 
   }
 
   return routes
+}
+
+export const joinPaths = (paths: string[]): string => {
+  let pathname = paths.join('/').replace(/\/\/+/g, '/')
+  if (!pathname.startsWith('/')) {
+    pathname = `/${pathname}`
+  }
+  return pathname
 }
 
 async function computeReactRoutes(ctx: PageContext): Promise<ReactRoute[]> {
@@ -79,6 +89,12 @@ async function computeReactRoutes(ctx: PageContext): Promise<ReactRoute[]> {
         parent.children = parent.children || []
         // Append to parent's children
         parentRoutes = parent.children
+        route.absolutePath = joinPaths([
+          parent.absolutePath || '',
+          route.path?.replace(/^\//, '') || '',
+        ])
+      } else {
+        route.absolutePath = route.path && joinPaths(['/', route.path?.replace(/^\//, '') || ''])
       }
 
       const exits = parentRoutes.some((parent) => {
@@ -121,3 +137,5 @@ export function nextEnhancedResolver(): PageResolver {
     },
   }
 }
+
+nextEnhancedResolver.$name = 'nextEnhancedResolver'

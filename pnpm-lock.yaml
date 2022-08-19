@@ -38,11 +38,11 @@ importers:
       vitest: ^0.18.1
       webpack: 5.44.0
       webpack-dev-server: 4.8.1
-      webpack-virtual-modules: ^0.4.2
+      webpack-virtual-modules: ^0.4.4
     dependencies:
       debug: 4.3.4
       pathe: 0.2.0
-      webpack-virtual-modules: 0.4.2
+      webpack-virtual-modules: 0.4.4
     devDependencies:
       '@aiou/eslint-config': 0.5.1_o7xewg6xwz7ac56w4qr2k7iqxm
       '@changesets/cli': 2.23.0
@@ -5327,7 +5327,7 @@ packages:
       eslint-import-resolver-webpack:
         optional: true
     dependencies:
-      '@typescript-eslint/parser': 5.30.3_jzhokl4shvj5szf5bgr66kln2a
+      '@typescript-eslint/parser': 5.30.3_7iexlkfeellrv7vfhq3a74dfym
       debug: 3.2.7
       eslint-import-resolver-node: 0.3.6
       find-up: 2.1.0
@@ -12753,8 +12753,8 @@ packages:
     engines: {node: '>=10.13.0'}
     dev: true
 
-  /webpack-virtual-modules/0.4.2:
-    resolution: {integrity: sha512-OUsT1VZhArN8nY7g6mMlw91HWnXcNXsIQjsQ83WteF4ViZ6YXqF2sWKOTDIZ0H+PPiApQdszLdZIrD7NNlU0Yw==}
+  /webpack-virtual-modules/0.4.4:
+    resolution: {integrity: sha512-h9atBP/bsZohWpHnr+2sic8Iecb60GxftXsWNLLLSqewgIsGzByd2gcIID4nXcG+3tNe4GQG3dLcff3kXupdRA==}
     dev: false
 
   /webpack/5.44.0_esbuild@0.14.48:

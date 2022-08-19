@@ -88,7 +88,7 @@
   "dependencies": {
     "debug": "^4.3.4",
     "pathe": "^0.2.0",
-    "webpack-virtual-modules": "^0.4.2"
+    "webpack-virtual-modules": "^0.4.4"
   },
   "devDependencies": {
     "@aiou/eslint-config": "^0.5.1",

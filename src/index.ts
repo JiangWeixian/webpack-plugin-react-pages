@@ -8,11 +8,11 @@ import type {
   PageContext as PageContextImpl,
 } from './vite-plugin-pages-types'
 import VirtualModulesPlugin from 'webpack-virtual-modules'
-import { resolve } from 'pathe'
+import { resolve, extname } from 'pathe'
 
 import { Compiler } from './types'
 import { createFilteredWatchFileSystem } from './wfs'
-import { logger } from './utils'
+import { filterRoutes, logger } from './utils'
 
 import { VIRTUAL_PAGES_ID, VIRTUAL_PAGES_ID_TEST, VIRTUAL_PAGES_ID_ALIAS } from './constants'
 
@@ -31,10 +31,15 @@ type WebpackPluginReactPagesOptions = Omit<
   resolver?: PageResolver
 }
 
+type RequestHistory = {
+  paths: Set<string>
+}
+
 export class WebpackPluginReactPages {
   vm: VirtualModulesPlugin
   nmp: NormalModuleReplacementPlugin
   page: PageContextImpl
+  requestHistory: RequestHistory
   private _watchRunPatched: WeakSet<Compiler> = new WeakSet()
   constructor({
     extensions = ['ts', 'tsx', 'js', 'jsx'],
@@ -48,10 +53,16 @@ export class WebpackPluginReactPages {
     this.nmp = new NormalModuleReplacementPlugin(/^virtual:react-pages/, (resource) => {
       resource.request = 'virtual-react-pages'
     })
+    this.requestHistory = {
+      paths: new Set('/'),
+    }
     this.page = new PageContext({
       extensions,
       routeStyle,
       resolver: 'react',
+      onRoutesGenerated: (routes: any[]) => {
+        return filterRoutes(routes, [...this.requestHistory.paths.values()])
+      },
       ...options,
       // TODO: type safe
     } as any) as any
@@ -63,15 +74,23 @@ export class WebpackPluginReactPages {
       compiler.options.resolve = {}
     }
     const devServer = compiler.options.devServer!
-    devServer.setupMiddlewares = (_: any, devServer: DevServer) => {
+    devServer.setupMiddlewares = (middlewares: any, devServer: DevServer) => {
       if (!devServer) {
         throw new Error('webpack-dev-server is not defined')
       }
 
       devServer.app?.get('*', (req, _, next) => {
-        console.log(req.url, req.headers)
+        const ext = extname(req.url)
+        // skip assets request
+        if (ext) {
+          next()
+          return
+        }
+        this.requestHistory.paths.add(req.url)
+        this.vm.writeModule(VIRTUAL_PAGES_ID, template)
         next()
       })
+      return middlewares
     }
     // process virual pages module
     compiler.options.module.rules.push({

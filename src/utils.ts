@@ -4,6 +4,12 @@ import { ReactRouteBase } from './resolver/next-enhanced'
 
 export const logger = Debug('wprp')
 
+export const warning = (condition: boolean, message: string) => {
+  if (!condition) {
+    console.warn(message)
+  }
+}
+
 const multipleMatchPath = (options: Parameters<typeof matchPath>[0], pathnames: string[]) => {
   return pathnames
     .map((pathname) => {

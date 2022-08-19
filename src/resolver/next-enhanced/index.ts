@@ -135,7 +135,6 @@ export function nextEnhancedResolver(): PageResolver {
       dynamicImport: (path) => `React.lazy(() => import("${path}"))`,
       final: (code) => `import React from "react";\n${code}`,
     },
+    _name: 'nextEnhancedResolver',
   }
 }
-
-nextEnhancedResolver.$name = 'nextEnhancedResolver'

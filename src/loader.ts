@@ -16,7 +16,6 @@ async function RoutesLoader(this: webpack.LoaderContext<any>, source: string, ..
   }
 
   const $page = (this._compiler as Compiler).$page
-  logger('page instance', $page)
 
   $page.pageRouteMap.clear()
   await $page.searchGlob()

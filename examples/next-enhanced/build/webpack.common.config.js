@@ -64,6 +64,9 @@ const common = {
       ],
     }),
     new WebpackPluginReactPages({
+      experimental: {
+        partialCompile: true,
+      },
       resolver: nextEnhancedResolver(),
     }),
   ],

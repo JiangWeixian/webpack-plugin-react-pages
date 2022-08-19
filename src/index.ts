@@ -1,5 +1,4 @@
 import { NormalModuleReplacementPlugin } from 'webpack'
-import type DevServer from 'webpack-dev-server'
 // eslint-disable-next-line import/no-extraneous-dependencies -- rollup will bundle this package
 import { PageContext } from 'vite-plugin-pages'
 import type {
@@ -12,7 +11,7 @@ import { resolve, extname } from 'pathe'
 
 import { Compiler } from './types'
 import { createFilteredWatchFileSystem } from './wfs'
-import { filterRoutes, logger } from './utils'
+import { filterRoutes, logger, warning } from './utils'
 
 import { VIRTUAL_PAGES_ID, VIRTUAL_PAGES_ID_TEST, VIRTUAL_PAGES_ID_ALIAS } from './constants'
 
@@ -29,10 +28,21 @@ type WebpackPluginReactPagesOptions = Omit<
   'pagesDir' | 'replaceSquareBrackets' | 'nuxtStyle' | 'syncIndex' | 'moduleId' | 'resolver'
 > & {
   resolver?: PageResolver
+  experimental?: {
+    partialCompile: boolean
+  }
 }
 
 type RequestHistory = {
   paths: Set<string>
+}
+
+const isSupportPartialCompile = (options: WebpackPluginReactPagesOptions) => {
+  return (
+    !!options.experimental?.partialCompile &&
+    // static $name inject in resolver/next-enhanced
+    options.resolver?._name === 'nextEnhancedResolver'
+  )
 }
 
 export class WebpackPluginReactPages {
@@ -40,12 +50,18 @@ export class WebpackPluginReactPages {
   nmp: NormalModuleReplacementPlugin
   page: PageContextImpl
   requestHistory: RequestHistory
+  options: WebpackPluginReactPagesOptions
   private _watchRunPatched: WeakSet<Compiler> = new WeakSet()
   constructor({
     extensions = ['ts', 'tsx', 'js', 'jsx'],
     routeStyle = 'remix',
     ...options
   }: WebpackPluginReactPagesOptions = {}) {
+    this.options = this.resolveOptions({
+      extensions,
+      routeStyle,
+      ...options,
+    })
     this.vm = new VirtualModulesPlugin({
       VIRTUAL_PAGES_ID: template,
     })
@@ -56,16 +72,35 @@ export class WebpackPluginReactPages {
     this.requestHistory = {
       paths: new Set('/'),
     }
-    this.page = new PageContext({
+    this.page = new PageContext(this.options as any) as any
+  }
+
+  resolveOptions({
+    extensions = ['ts', 'tsx', 'js', 'jsx'],
+    routeStyle = 'remix',
+    ...options
+  }: WebpackPluginReactPagesOptions = {}) {
+    logger(
+      isSupportPartialCompile(options)
+        ? 'Experimental.partialCompile is enabled'
+        : 'Experimental.partialCompile is disabled',
+    )
+    warning(
+      !isSupportPartialCompile(options),
+      'Experimental.partialCompile only available with nextEnhancedResolver',
+    )
+    return {
       extensions,
       routeStyle,
       resolver: 'react',
-      onRoutesGenerated: (routes: any[]) => {
-        return filterRoutes(routes, [...this.requestHistory.paths.values()])
-      },
+      onRoutesGenerated: isSupportPartialCompile(options)
+        ? (routes: any[]) => {
+            return filterRoutes(routes, [...this.requestHistory.paths.values()])
+          }
+        : undefined,
       ...options,
       // TODO: type safe
-    } as any) as any
+    } as any
   }
 
   apply(compiler: Compiler) {
@@ -74,12 +109,16 @@ export class WebpackPluginReactPages {
       compiler.options.resolve = {}
     }
     const devServer = compiler.options.devServer!
-    devServer.setupMiddlewares = (middlewares: any, devServer: DevServer) => {
+    devServer.setupMiddlewares = (middlewares: any, devServer: any) => {
       if (!devServer) {
         throw new Error('webpack-dev-server is not defined')
       }
 
-      devServer.app?.get('*', (req, _, next) => {
+      if (!isSupportPartialCompile(this.options)) {
+        return middlewares
+      }
+
+      devServer.app?.get('*', (req: { url: string }, _: any, next: () => void) => {
         const ext = extname(req.url)
         // skip assets request
         if (ext) {

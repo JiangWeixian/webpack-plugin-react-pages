@@ -121,7 +121,8 @@
     "vite": "^2.9.13",
     "vite-plugin-pages": "0.23.0",
     "vitest": "^0.18.1",
-    "webpack": "5.44.0"
+    "webpack": "5.44.0",
+    "webpack-dev-server": "4.8.1"
   },
   "config": {
     "commitizen": {

@@ -1,4 +1,5 @@
 import { NormalModuleReplacementPlugin } from 'webpack'
+import type DevServer from 'webpack-dev-server'
 // eslint-disable-next-line import/no-extraneous-dependencies -- rollup will bundle this package
 import { PageContext } from 'vite-plugin-pages'
 import type {
@@ -61,6 +62,18 @@ export class WebpackPluginReactPages {
     if (!compiler.options.resolve) {
       compiler.options.resolve = {}
     }
+    const devServer = compiler.options.devServer!
+    devServer.setupMiddlewares = (_: any, devServer: DevServer) => {
+      if (!devServer) {
+        throw new Error('webpack-dev-server is not defined')
+      }
+
+      devServer.app?.get('*', (req, _, next) => {
+        console.log(req.url, req.headers)
+        next()
+      })
+    }
+    // process virual pages module
     compiler.options.module.rules.push({
       include(resource) {
         return VIRTUAL_PAGES_ID_TEST.test(resource)

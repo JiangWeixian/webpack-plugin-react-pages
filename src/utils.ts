@@ -27,17 +27,17 @@ export const filterRoutes = (routes: ReactRouteBase[], pathnames: string[]) => {
     return
   }
   routes.forEach((route) => {
-    if (!route.absolutePath) {
-      return
+    let matched = false
+    if (route.absolutePath) {
+      matched = multipleMatchPath(
+        { path: route.absolutePath!, end: !route.children, caseSensitive: route.caseSensitive },
+        pathnames,
+      )
     }
-    const matched = multipleMatchPath(
-      { path: route.absolutePath!, end: !route.children, caseSensitive: route.caseSensitive },
-      pathnames,
-    )
     if (route.children) {
       route.children = filterRoutes(route.children, pathnames)
     }
-    if (matched) {
+    if (matched || (route.children && route.children?.length > 0)) {
       matchedRoutes.push(route)
     }
   })

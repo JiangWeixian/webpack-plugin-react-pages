@@ -72,6 +72,7 @@ export class WebpackPluginReactPages {
     this.requestHistory = {
       paths: new Set('/'),
     }
+    // TODO: type safe
     this.page = new PageContext(this.options as any) as any
   }
 
@@ -99,8 +100,7 @@ export class WebpackPluginReactPages {
           }
         : undefined,
       ...options,
-      // TODO: type safe
-    } as any
+    } as WebpackPluginReactPagesOptions
   }
 
   apply(compiler: Compiler) {
@@ -126,6 +126,7 @@ export class WebpackPluginReactPages {
           return
         }
         this.requestHistory.paths.add(req.url)
+        console.log('currently active pathnames:', [...this.requestHistory.paths.values()])
         this.vm.writeModule(VIRTUAL_PAGES_ID, template)
         next()
       })

@@ -87,8 +87,8 @@ export class WebpackPluginReactPages {
         : 'Experimental.partialCompile is disabled',
     )
     warning(
-      !isSupportPartialCompile(options),
-      'Experimental.partialCompile only available with nextEnhancedResolver',
+      isSupportPartialCompile(options),
+      '`Experimental.partialCompile` only available with nextEnhancedResolver',
     )
     return {
       extensions,

@@ -1,7 +1,8 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const Home = () => {
+  const navigate = useNavigate()
   return (
     <div className="flex-1 hero bg-base-200 overflow-auto">
       <div className="hero-content flex-col gap-8 lg:flex-row-reverse">
@@ -10,19 +11,13 @@ const Home = () => {
             <Link to="/">/</Link>
           </div>
           <div className="link link-hover">
-            <Link to="/about">/about</Link>
-          </div>
-          <div className="link link-hover">
-            <Link to="/post">/post</Link>
-          </div>
-          <div className="link link-hover">
-            <Link to={`/user/${Math.floor(Math.random() * 100)}`}>/user/[id]</Link>
-          </div>
-          <div className="link link-hover">
-            <Link to="/login">pathless</Link>
-          </div>
-          <div className="link link-hover">
-            <Link to="/404">/404</Link>
+            <a
+              onClick={() => {
+                navigate(`/partial-compile/${Math.floor(Math.random() * 100)}`)
+              }}
+            >
+              /partial-compile/random
+            </a>
           </div>
         </div>
       </div>

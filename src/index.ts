@@ -41,7 +41,8 @@ const isSupportPartialCompile = (options: WebpackPluginReactPagesOptions) => {
   return (
     !!options.experimental?.partialCompile &&
     // static $name inject in resolver/next-enhanced
-    options.resolver?._name === 'nextEnhancedResolver'
+    options.resolver?._name === 'nextEnhancedResolver' &&
+    process.env.NODE_ENV === 'development'
   )
 }
 
@@ -87,7 +88,7 @@ export class WebpackPluginReactPages {
         : 'Experimental.partialCompile is disabled',
     )
     warning(
-      isSupportPartialCompile(options),
+      !options.experimental?.partialCompile || isSupportPartialCompile(options),
       '`Experimental.partialCompile` only available with nextEnhancedResolver',
     )
     return {
@@ -109,7 +110,7 @@ export class WebpackPluginReactPages {
       compiler.options.resolve = {}
     }
     const devServer = compiler.options.devServer!
-    devServer.setupMiddlewares = (middlewares: any, devServer: any) => {
+    devServer.setupMiddlewares = (middlewares: any[], devServer: any) => {
       if (!devServer) {
         throw new Error('webpack-dev-server is not defined')
       }

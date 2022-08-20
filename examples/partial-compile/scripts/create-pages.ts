@@ -1,7 +1,7 @@
 import { outputFileSync } from 'fs-extra'
 import path from 'path'
 
-const template = `
+const template = (content) => `
 import React from 'react'
 import { Link } from 'react-router-dom'
 
@@ -10,24 +10,7 @@ const Page = () => {
     <div className="flex-1 hero bg-base-200 overflow-auto">
       <div className="hero-content flex-col gap-8 lg:flex-row-reverse">
         <div className="flex flex-col my-6 gap-2">
-          <div className="link link-hover">
-            <Link to="/">/</Link>
-          </div>
-          <div className="link link-hover">
-            <Link to="/about">/about</Link>
-          </div>
-          <div className="link link-hover">
-            <Link to="/post">/post</Link>
-          </div>
-          <div className="link link-hover">
-            <Link to="/">/user/[id]</Link>
-          </div>
-          <div className="link link-hover">
-            <Link to="/login">pathless</Link>
-          </div>
-          <div className="link link-hover">
-            <Link to="/404">/404</Link>
-          </div>
+          ${content}
         </div>
       </div>
     </div>
@@ -41,6 +24,6 @@ const target = path.resolve(__dirname, '../src/pages/partial-compile')
 
 const pages = new Array(100).fill(target).map((t, i) => path.resolve(t, `${i}.tsx`))
 
-pages.forEach((page) => {
-  outputFileSync(page, template)
+pages.forEach((page, index) => {
+  outputFileSync(page, template(index))
 })

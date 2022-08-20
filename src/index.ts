@@ -57,6 +57,7 @@ export class WebpackPluginReactPages {
   page: PageContextImpl
   requestHistory: RequestHistory
   options: WebpackPluginReactPagesOptions
+
   private _watchRunPatched: WeakSet<Compiler> = new WeakSet()
   constructor({
     extensions = ['ts', 'tsx', 'js', 'jsx'],
@@ -138,8 +139,8 @@ export class WebpackPluginReactPages {
         if (req.url.startsWith(PREFIX)) {
           pathname = req.url.slice(PREFIX.length)
         }
+        logger('currently active pathnames:', [...this.requestHistory.paths.values()])
         this.requestHistory.paths.add(pathname)
-        console.log('currently active pathnames:', [...this.requestHistory.paths.values()])
         this.vm.writeModule(VIRTUAL_PAGES_ID, template)
         next()
       })
@@ -182,7 +183,9 @@ export class WebpackPluginReactPages {
     })
 
     // related to pr: https://github.com/sysgears/webpack-virtual-modules/pull/129/files
-    if (!this._watchRunPatched.has(compiler)) {
+    // in first startup, virtual module trigger webpack build twice
+    // DRUNK CODE: disable on partial compile mode - hack watch run pending webpack build states
+    if (!this._watchRunPatched.has(compiler) && !compiler.$state.isSupportPartialCompile) {
       compiler.watchFileSystem = createFilteredWatchFileSystem(compiler.watchFileSystem as any)
       this._watchRunPatched.add(compiler)
     }

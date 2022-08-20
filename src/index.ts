@@ -13,7 +13,12 @@ import { Compiler } from './types'
 import { createFilteredWatchFileSystem } from './wfs'
 import { filterRoutes, logger, warning } from './utils'
 
-import { VIRTUAL_PAGES_ID, VIRTUAL_PAGES_ID_TEST, VIRTUAL_PAGES_ID_ALIAS } from './constants'
+import {
+  VIRTUAL_PAGES_ID,
+  VIRTUAL_PAGES_ID_TEST,
+  VIRTUAL_PAGES_ID_ALIAS,
+  PREFIX,
+} from './constants'
 
 const routesLoader = resolve(__dirname, 'loader.cjs')
 const PLUGIN = 'WEBAPCK_PLUGIN_REACT_PAGES'
@@ -106,6 +111,9 @@ export class WebpackPluginReactPages {
 
   apply(compiler: Compiler) {
     compiler.$page = this.page
+    compiler.$state = {
+      isSupportPartialCompile: isSupportPartialCompile(this.options),
+    }
     if (!compiler.options.resolve) {
       compiler.options.resolve = {}
     }
@@ -126,7 +134,11 @@ export class WebpackPluginReactPages {
           next()
           return
         }
-        this.requestHistory.paths.add(req.url)
+        let pathname = req.url
+        if (req.url.startsWith(PREFIX)) {
+          pathname = req.url.slice(PREFIX.length)
+        }
+        this.requestHistory.paths.add(pathname)
         console.log('currently active pathnames:', [...this.requestHistory.paths.values()])
         this.vm.writeModule(VIRTUAL_PAGES_ID, template)
         next()

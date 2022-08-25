@@ -34,6 +34,7 @@ interface PageResolver {
         removed?: (ctx: PageContext, path: string) => Awaitable<void>;
         changed?: (ctx: PageContext, path: string) => Awaitable<void>;
     };
+    _name?: string
 }
 /**
  * Plugin options.

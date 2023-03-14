@@ -1,4 +1,4 @@
-import { NormalModuleReplacementPlugin } from 'webpack'
+import webpack from 'webpack'
 // eslint-disable-next-line import/no-extraneous-dependencies -- rollup will bundle this package
 import { PageContext } from 'vite-plugin-pages'
 import type {
@@ -34,7 +34,7 @@ const isVirtualSchemaModule = (id: string) => id.includes('virtual:')
 
 export class WebpackPluginReactPages {
   vm: VirtualModulesPlugin
-  nmp?: NormalModuleReplacementPlugin
+  nmp?: webpack.NormalModuleReplacementPlugin
   page: PageContextImpl
   /**
    * @description Modules used in project
@@ -91,7 +91,7 @@ export class WebpackPluginReactPages {
     compiler.$page = this.page
     // support `virtual:` protocol
     if (this.shouldSupportVirtualModules) {
-      this.nmp = new NormalModuleReplacementPlugin(this.moduleRE, (resource) => {
+      this.nmp = new webpack.NormalModuleReplacementPlugin(this.moduleRE, (resource) => {
         resource.request = resolve(
           compiler.context,
           `node_modules/${resource.request.replace('virtual:', 'virtual-')}`,

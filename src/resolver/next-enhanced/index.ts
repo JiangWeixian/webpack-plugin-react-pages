@@ -7,6 +7,7 @@ import type {
   ResolvedOptions,
   PageContext,
 } from '../../vite-plugin-pages-types'
+import { VIRTUAL_PAGES_SCHEMA } from '../../constants'
 
 export interface ReactRouteBase {
   caseSensitive?: boolean
@@ -105,6 +106,9 @@ async function resolveReactRoutes(ctx: PageContext) {
 
 export function nextEnhancedResolver(): PageResolver {
   return {
+    resolveModuleIds() {
+      return [VIRTUAL_PAGES_SCHEMA]
+    },
     resolveExtensions() {
       return ['tsx', 'jsx', 'ts', 'js']
     },

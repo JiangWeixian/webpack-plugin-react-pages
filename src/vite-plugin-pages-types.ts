@@ -20,7 +20,7 @@ interface PageOptions {
 }
 interface PageResolver {
     // NOTE: Not allow custom `virtual-module-name` in webpack-plugin-react-pages currently
-    // resolveModuleIds: () => string[];
+    resolveModuleIds: () => string[];
     resolveExtensions: () => string[];
     resolveRoutes: (ctx: PageContext) => Awaitable<string>;
     getComputedRoutes: (ctx: PageContext) => Awaitable<ReactRoute[]>

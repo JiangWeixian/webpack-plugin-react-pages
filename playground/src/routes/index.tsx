@@ -1,5 +1,5 @@
 import { BrowserRouter, useRoutes, Link } from 'react-router-dom'
-import routes from 'virtual:react-pages'
+import routes from 'virtual:generated-pages-react'
 import React, { useCallback, useState, Suspense } from 'react'
 import { DarkIcon, LightIcon } from '@/components/Icons'
 

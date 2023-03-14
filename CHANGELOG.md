@@ -1,5 +1,16 @@
 # webpack-plugin-react-pages
 
+## 0.3.0
+
+### Minor Changes
+
+- 6dd165b: import modules ids from resolver.moduleIds & \_\_dirname not found in mjs
+
+### Patch Changes
+
+- 6dd165b: write vm modules in node_modules
+- 6dd165b: webpack named exports failed
+
 ## 0.2.0
 
 ### Minor Changes

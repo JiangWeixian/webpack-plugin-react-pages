@@ -1,5 +1,11 @@
 # webpack-plugin-react-pages
 
+## 0.3.1
+
+### Patch Changes
+
+- 5ae912f: upgrade webpack-virtual-modules
+
 ## 0.3.0
 
 ### Minor Changes

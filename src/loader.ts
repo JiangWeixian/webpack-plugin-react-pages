@@ -3,11 +3,23 @@ import type webpack from 'webpack'
 import type { Compiler } from './types'
 import { logger } from './utils'
 
-async function RoutesLoader(this: webpack.LoaderContext<any>, source: string, ...args: any) {
+interface RoutesLoaderOptions {
+  namespace?: string
+}
+
+async function RoutesLoader(
+  this: webpack.LoaderContext<RoutesLoaderOptions>,
+  source: string,
+  ...args: any
+) {
   const callback = this.async()
+  const { namespace } = this.getOptions()
   // disable cache, make sure the pages data is always called
   this.cacheable(false)
-  const $page = (this._compiler as Compiler).$page
+  let $page = (this._compiler as Compiler).$page
+  if (namespace) {
+    $page = this._compiler?.[namespace]?.$page
+  }
 
   logger('page instance', $page)
 

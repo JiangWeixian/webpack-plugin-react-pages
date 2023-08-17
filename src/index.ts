@@ -28,6 +28,12 @@ type WebpackPluginReactPagesOptions = Omit<
   'pagesDir' | 'replaceSquareBrackets' | 'nuxtStyle' | 'syncIndex' | 'moduleId' | 'resolver'
 > & {
   resolver?: PageResolver
+  /**
+   * @description Register PageContext instance namespace
+   * if namespace defined, access via compiler[namespace].page, otherwise compiler.page
+   * @default undefined
+   */
+  namespace?: string
 }
 
 const isVirtualSchemaModule = (id: string) => id.includes('virtual:')
@@ -52,10 +58,12 @@ export class WebpackPluginReactPages {
   moduleRE: RegExp
   resolvedModuleRE: RegExp
   shouldSupportVirtualModules = true
+  namespace?: string
   private _watchRunPatched: WeakSet<Compiler> = new WeakSet()
   constructor({
     extensions = ['ts', 'tsx', 'js', 'jsx'],
     routeStyle = 'remix',
+    namespace,
     ...options
   }: WebpackPluginReactPagesOptions = {}) {
     this.page = new PageContext({
@@ -65,6 +73,7 @@ export class WebpackPluginReactPages {
       ...options,
       // TODO: type safe
     } as any) as any
+    this.namespace = namespace
     this.moduleIds = this.page.options.resolver.resolveModuleIds()
     this.resolvedModuleIds = this.moduleIds.map((id) => {
       let resolvedId = id
@@ -88,7 +97,12 @@ export class WebpackPluginReactPages {
   }
 
   apply(compiler: Compiler) {
-    compiler.$page = this.page
+    if (this.namespace) {
+      compiler[this.namespace] = {}
+      compiler[this.namespace].$page = this.page
+    } else {
+      compiler.$page = this.page
+    }
     // support `virtual:` protocol
     if (this.shouldSupportVirtualModules) {
       this.nmp = new webpack.NormalModuleReplacementPlugin(this.moduleRE, (resource) => {
@@ -112,6 +126,9 @@ export class WebpackPluginReactPages {
       use: [
         {
           loader: routesLoader,
+          options: {
+            namespace: this.namespace,
+          },
         },
       ],
     })

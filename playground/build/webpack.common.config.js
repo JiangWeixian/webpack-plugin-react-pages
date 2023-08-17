@@ -62,7 +62,9 @@ const common = {
         },
       ],
     }),
-    new WebpackPluginReactPages(),
+    new WebpackPluginReactPages({
+      namespace: 'next',
+    }),
   ],
 }
 

@@ -1,5 +1,11 @@
 # webpack-plugin-react-pages
 
+## 0.3.2
+
+### Patch Changes
+
+- f6a313f: support registered page context instance namespace
+
 ## 0.3.1
 
 ### Patch Changes

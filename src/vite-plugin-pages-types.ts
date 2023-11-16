@@ -174,6 +174,11 @@ declare class PageContext {
         resolver: debug.Debugger;
     };
     get pageRouteMap(): Map<string, PageRoute>;
+    /**
+     * @description Force invalid virtual react pages module
+     * register in plugin
+     */
+    invalid(): void
 }
 
 interface VueRouteBase {

@@ -1,5 +1,11 @@
 # webpack-plugin-react-pages
 
+## 0.3.3
+
+### Patch Changes
+
+- 459c44b: support expose invalid api
+
 ## 0.3.2
 
 ### Patch Changes

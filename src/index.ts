@@ -97,11 +97,18 @@ export class WebpackPluginReactPages {
   }
 
   apply(compiler: Compiler) {
+    const invalid = () => {
+      this.resolvedModuleIds.forEach((id) => {
+        this.vm.writeModule(`node_modules/${id}`, template)
+      })
+    }
     if (this.namespace) {
       compiler[this.namespace] = {}
       compiler[this.namespace].$page = this.page
+      compiler[this.namespace].$page.invalid = invalid
     } else {
       compiler.$page = this.page
+      compiler.$page.invalid = invalid
     }
     // support `virtual:` protocol
     if (this.shouldSupportVirtualModules) {
@@ -146,9 +153,7 @@ export class WebpackPluginReactPages {
     this.vm.apply(compiler as any)
 
     compiler.hooks.compilation.tap(PLUGIN, () => {
-      this.resolvedModuleIds.forEach((id) => {
-        this.vm.writeModule(`node_modules/${id}`, template)
-      })
+      invalid()
     })
 
     // related to pr: https://github.com/sysgears/webpack-virtual-modules/pull/129/files

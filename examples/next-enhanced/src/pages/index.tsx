@@ -1,11 +1,10 @@
-import React from 'react'
 import { Link } from 'react-router-dom'
 
 const Home = () => {
   return (
-    <div className="flex-1 hero bg-base-200 overflow-auto">
+    <div className="hero bg-base-200 flex-1 overflow-auto">
       <div className="hero-content flex-col gap-8 lg:flex-row-reverse">
-        <div className="flex flex-col my-6 gap-2">
+        <div className="my-6 flex flex-col gap-2">
           <div className="link link-hover">
             <Link to="/">/</Link>
           </div>

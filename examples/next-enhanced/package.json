@@ -1,7 +1,7 @@
 {
   "name": "next-enhanced",
-  "private": "true",
   "version": "0.0.0",
+  "private": "true",
   "description": "React template",
   "license": "MIT",
   "homepage": "https://github.com/spring-catponents/react-template#readme",
@@ -27,9 +27,7 @@
     "lint:fix": "eslint . --fix"
   },
   "lint-staged": {
-    "**/**/*.{js,ts,tsx,vue,json}": [
-      "eslint --fix"
-    ]
+    "**/**/*.{js,ts,tsx,vue,json}": ["eslint --fix"]
   },
   "dependencies": {
     "@rematch/core": "2.2.0",
@@ -43,7 +41,7 @@
     "react-router-dom": "6.3.0",
     "redux": "4.1.2",
     "swr": "1.3.0",
-    "webpack-plugin-react-pages": "workspace:^0.3.3"
+    "webpack-plugin-react-pages": "workspace:*"
   },
   "devDependencies": {
     "@aiou/eslint-config": "0.5.1",

@@ -1,18 +1,25 @@
-import webpack from 'webpack'
+import { fileURLToPath } from 'node:url'
+
+import {
+  dirname,
+  join,
+  resolve,
+} from 'pathe'
 // eslint-disable-next-line import/no-extraneous-dependencies -- rollup will bundle this package
 import { PageContext } from 'vite-plugin-pages'
-import type {
-  UserOptions,
-  PageResolver,
-  PageContext as PageContextImpl,
-} from './vite-plugin-pages-types'
+import webpack from 'webpack'
+import { WebpackLocalModule } from 'webpack-local-module'
 import VirtualModulesPlugin from 'webpack-virtual-modules'
-import { resolve, dirname } from 'pathe'
-import { fileURLToPath } from 'url'
 
-import { Compiler } from './types'
-import { createFilteredWatchFileSystem } from './wfs'
 import { logger } from './utils'
+import { createFilteredWatchFileSystem } from './wfs'
+
+import type { Compiler } from './types'
+import type {
+  PageContext as PageContextImpl,
+  PageResolver,
+  UserOptions,
+} from './vite-plugin-pages-types'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const routesLoader = resolve(__dirname, 'loader.cjs')
@@ -25,7 +32,7 @@ export default routes;
 type WebpackPluginReactPagesOptions = Omit<
   UserOptions,
   // omit deprecated options, omit non-react-resolver only support react framework
-  'pagesDir' | 'replaceSquareBrackets' | 'nuxtStyle' | 'syncIndex' | 'moduleId' | 'resolver'
+  'moduleId' | 'nuxtStyle' | 'pagesDir' | 'replaceSquareBrackets' | 'resolver' | 'syncIndex'
 > & {
   resolver?: PageResolver
   /**
@@ -34,12 +41,17 @@ type WebpackPluginReactPagesOptions = Omit<
    * @default undefined
    */
   namespace?: string
+  /**
+   * @description With rspack bundler, virtual react pages module will write into disk
+   * @default false
+   */
+  rspack?: boolean
 }
 
 const isVirtualSchemaModule = (id: string) => id.includes('virtual:')
 
 export class WebpackPluginReactPages {
-  vm: VirtualModulesPlugin
+  vm: VirtualModulesPlugin | WebpackLocalModule
   nmp?: webpack.NormalModuleReplacementPlugin
   page: PageContextImpl
   /**
@@ -57,13 +69,15 @@ export class WebpackPluginReactPages {
   virtualSchemaModuleIds: string[]
   moduleRE: RegExp
   resolvedModuleRE: RegExp
-  shouldSupportVirtualModules = true
+  shouldSupportVirtualModules = false
   namespace?: string
+  rspack?: boolean
   private _watchRunPatched: WeakSet<Compiler> = new WeakSet()
   constructor({
     extensions = ['ts', 'tsx', 'js', 'jsx'],
     routeStyle = 'remix',
     namespace,
+    rspack = false,
     ...options
   }: WebpackPluginReactPagesOptions = {}) {
     this.page = new PageContext({
@@ -91,9 +105,14 @@ export class WebpackPluginReactPages {
     this.resolvedModuleIds.forEach((id) => {
       modules[`node_modules/${id}`] = template
     })
-    this.vm = new VirtualModulesPlugin({
-      ...modules,
-    })
+    this.rspack = rspack
+    this.vm = rspack
+      ? new WebpackLocalModule({
+        ...modules,
+      }, { dirname: '.react-routes' })
+      : new VirtualModulesPlugin({
+        ...modules,
+      })
   }
 
   apply(compiler: Compiler) {
@@ -110,8 +129,8 @@ export class WebpackPluginReactPages {
       compiler.$page = this.page
       compiler.$page.invalid = invalid
     }
-    // support `virtual:` protocol
-    if (this.shouldSupportVirtualModules) {
+    // support `virtual:` protocol in webpack@5
+    if (this.shouldSupportVirtualModules && !this.rspack) {
       this.nmp = new webpack.NormalModuleReplacementPlugin(this.moduleRE, (resource) => {
         resource.request = resolve(
           compiler.context,
@@ -123,6 +142,13 @@ export class WebpackPluginReactPages {
 
     if (!compiler.options.resolve) {
       compiler.options.resolve = {}
+    }
+    if (this.rspack) {
+      compiler.options.resolve.alias = {
+        ...compiler.options.resolve.alias,
+        // rspack not support import file from `/src/*`
+        '/src': join(this.page.options.root, 'src'),
+      }
     }
     const resolvedModuleRE = this.resolvedModuleRE
     compiler.options.module.rules.push({
@@ -152,7 +178,8 @@ export class WebpackPluginReactPages {
     // Applying a webpack compiler to the virtual module
     this.vm.apply(compiler as any)
 
-    compiler.hooks.compilation.tap(PLUGIN, () => {
+    // Register virtual module during build
+    !this.rspack && compiler.hooks.compilation.tap(PLUGIN, () => {
       invalid()
     })
 

@@ -1,13 +1,17 @@
-import { buildReactRoutePath, countSlash, normalizeCase } from './utils'
+import { VIRTUAL_PAGES_SCHEMA } from '../../constants'
 import { generateClientCode } from './stringify'
+import {
+  buildReactRoutePath,
+  countSlash,
+  normalizeCase,
+} from './utils'
 
 import type {
   Optional,
+  PageContext,
   PageResolver,
   ResolvedOptions,
-  PageContext,
 } from '../../vite-plugin-pages-types'
-import { VIRTUAL_PAGES_SCHEMA } from '../../constants'
 
 export interface ReactRouteBase {
   caseSensitive?: boolean
@@ -19,15 +23,19 @@ export interface ReactRouteBase {
 }
 
 export interface ReactRoute
-  extends Omit<Optional<ReactRouteBase, 'rawRoute' | 'path'>, 'children'> {
+  extends Omit<Optional<ReactRouteBase, 'path' | 'rawRoute'>, 'children'> {
   children?: ReactRoute[]
 }
 
 function prepareRoutes(routes: ReactRoute[], options: ResolvedOptions, parent?: ReactRoute) {
   for (const route of routes) {
-    if (parent) route.path = route.path?.replace(/^\//, '')
+    if (parent) {
+      route.path = route.path?.replace(/^\//, '')
+    }
 
-    if (route.children) route.children = prepareRoutes(route.children, options, route)
+    if (route.children) {
+      route.children = prepareRoutes(route.children, options, route)
+    }
 
     delete route.rawRoute
 
@@ -60,7 +68,9 @@ async function computeReactRoutes(ctx: PageContext): Promise<ReactRoute[]> {
         rawRoute: pathNodes.slice(0, i + 1).join('/'),
       }
 
-      if (i === pathNodes.length - 1) route.element = element
+      if (i === pathNodes.length - 1) {
+        route.element = element
+      }
 
       const isIndexRoute = normalizeCase(node, caseSensitive).endsWith('index')
 
@@ -85,7 +95,9 @@ async function computeReactRoutes(ctx: PageContext): Promise<ReactRoute[]> {
       const exits = parentRoutes.some((parent) => {
         return pathNodes.slice(0, i + 1).join('/') === parent.rawRoute
       })
-      if (!exits) parentRoutes.push(route)
+      if (!exits) {
+        parentRoutes.push(route)
+      }
     }
   })
 
@@ -119,9 +131,9 @@ export function nextEnhancedResolver(): PageResolver {
       return computeReactRoutes(ctx)
     },
     stringify: {
-      component: (path) => `React.createElement(${path})`,
-      dynamicImport: (path) => `React.lazy(() => import("${path}"))`,
-      final: (code) => `import React from "react";\n${code}`,
+      component: path => `React.createElement(${path})`,
+      dynamicImport: path => `React.lazy(() => import("${path}"))`,
+      final: code => `import React from "react";\n${code}`,
     },
   }
 }

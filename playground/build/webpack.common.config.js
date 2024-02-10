@@ -32,6 +32,7 @@ const common = {
             options: {
               loader: 'tsx',
               target: 'es2015',
+              jsx: 'automatic',
             },
           },
         ],

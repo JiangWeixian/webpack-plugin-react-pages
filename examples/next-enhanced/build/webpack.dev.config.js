@@ -7,6 +7,7 @@ const { merge } = require('webpack-merge')
 
 const configs = require('./config')
 const common = require('./webpack.common.config')
+
 const port = 8080
 
 /**

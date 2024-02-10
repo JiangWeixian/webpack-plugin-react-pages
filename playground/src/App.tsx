@@ -1,7 +1,6 @@
-import React from 'react'
-import RouterViewer from '@/routes'
-
 import './App.css'
+
+import RouterViewer from '@/routes'
 
 const App = () => {
   return <RouterViewer />

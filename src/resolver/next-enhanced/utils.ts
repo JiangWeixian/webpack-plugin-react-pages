@@ -1,4 +1,10 @@
-import { cacheAllRouteRE, countSlashRE, dynamicRouteRE, replaceDynamicRouteRE } from './constants'
+import {
+  cacheAllRouteRE,
+  countSlashRE,
+  dynamicRouteRE,
+  replaceDynamicRouteRE,
+} from './constants'
+
 import type { ResolvedOptions } from '../../vite-plugin-pages-types'
 
 export function countSlash(value: string) {
@@ -14,18 +20,24 @@ export function isCatchAllRoute(routePath: string) {
 }
 
 export function normalizeCase(str: string, caseSensitive: boolean) {
-  if (!caseSensitive) return str.toLocaleLowerCase()
+  if (!caseSensitive) {
+    return str.toLocaleLowerCase()
+  }
   return str
 }
 
 export function resolveImportMode(filepath: string, options: ResolvedOptions) {
   const mode = options.importMode
-  if (typeof mode === 'function') return mode(filepath, options)
+  if (typeof mode === 'function') {
+    return mode(filepath, options)
+  }
   return mode
 }
 
 export function normalizeName(name: string, isDynamic: boolean) {
-  if (!isDynamic) return name
+  if (!isDynamic) {
+    return name
+  }
 
   return name.replace(replaceDynamicRouteRE, '$1')
 }
@@ -44,7 +56,9 @@ export function buildReactRoutePath(node: string): string | undefined {
   }
 
   if (isDynamic) {
-    if (isCatchAll) return '*'
+    if (isCatchAll) {
+      return '*'
+    }
 
     return `:${normalizedName}`
   }

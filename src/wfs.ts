@@ -1,9 +1,11 @@
 // refs: https://github.com/sysgears/webpack-virtual-modules/pull/129
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import type { Watcher, NodeWatchFileSystem } from './types'
-// eslint-disable-next-line import/no-extraneous-dependencies -- rollup will bundle this package
 import debounce from 'lodash/debounce'
+
 import { logger } from './utils'
+
+import type { NodeWatchFileSystem, Watcher } from './types'
 
 let count = 0
 

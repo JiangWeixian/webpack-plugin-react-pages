@@ -1,6 +1,11 @@
+import path from 'node:path'
+
 import { PageContext } from 'vite-plugin-pages'
-import path from 'path'
-import { describe, it, expect } from 'vitest'
+import {
+  describe,
+  expect,
+  it,
+} from 'vitest'
 
 import { nextEnhancedResolver } from '../src/resolver'
 

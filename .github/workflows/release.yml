@@ -4,7 +4,7 @@ on:
     branches:
       - main
       - master
-      - 'releases/*'
+      - "releases/*"
 env:
   CI: true
 jobs:

@@ -1,5 +1,5 @@
-import { resolveImportMode } from './utils'
 import { ROUTE_IMPORT_NAME } from './constants'
+import { resolveImportMode } from './utils'
 
 import type { ResolvedOptions } from '../../vite-plugin-pages-types'
 
@@ -17,7 +17,9 @@ function replaceFunction(_: any, value: any) {
       .replace(/(\t|\n|\r|\s)/g, '')
 
     // ES6 Arrow Function
-    if (fnBody.length < 8 || fnBody.substring(0, 8) !== 'function') return `_NuFrRa_${fnBody}`
+    if (fnBody.length < 8 || fnBody.substring(0, 8) !== 'function') {
+      return `_NuFrRa_${fnBody}`
+    }
 
     return fnBody
   }
@@ -43,7 +45,9 @@ export function stringifyRoutes(preparedRoutes: any[], options: ResolvedOptions)
   function componentReplacer(str: string, replaceStr: string, path: string) {
     let importName = importsMap.get(path)
 
-    if (!importName) importName = ROUTE_IMPORT_NAME.replace('$1', `${importsMap.size}`)
+    if (!importName) {
+      importName = ROUTE_IMPORT_NAME.replace('$1', `${importsMap.size}`)
+    }
 
     importsMap.set(path, importName)
 
@@ -57,7 +61,7 @@ export function stringifyRoutes(preparedRoutes: any[], options: ResolvedOptions)
     componentReplacer,
   )
 
-  const imports = Array.from(importsMap).map((args) => getImportString(...args))
+  const imports = Array.from(importsMap).map(args => getImportString(...args))
 
   return {
     imports,

@@ -1,4 +1,5 @@
 import { createModel } from '@rematch/core'
+
 import type { RootModel } from '../index'
 
 export const count = createModel<RootModel>()({
@@ -8,7 +9,7 @@ export const count = createModel<RootModel>()({
       return state + payload
     },
   },
-  effects: (dispatch) => ({
+  effects: dispatch => ({
     incrementAsync(payload: number) {
       dispatch.count.increment(payload)
     },

@@ -1,7 +1,7 @@
-import type webpack from 'webpack'
-
-import type { Compiler } from './types'
 import { logger } from './utils'
+
+import type webpack from 'webpack'
+import type { Compiler } from './types'
 
 interface RoutesLoaderOptions {
   namespace?: string

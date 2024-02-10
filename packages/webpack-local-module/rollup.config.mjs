@@ -1,12 +1,13 @@
-import resolve from '@rollup/plugin-node-resolve'
-import commonjs from '@rollup/plugin-commonjs'
-import esbuild from 'rollup-plugin-esbuild'
-import { externals } from 'rollup-plugin-node-externals'
-import alias from '@rollup/plugin-alias'
-import size from 'rollup-plugin-filesize'
-import ce from 'rollup-plugin-condition-exports'
-import { defineConfig } from 'rollup'
 import path from 'node:path'
+
+import alias from '@rollup/plugin-alias'
+import commonjs from '@rollup/plugin-commonjs'
+import resolve from '@rollup/plugin-node-resolve'
+import { defineConfig } from 'rollup'
+import ce from 'rollup-plugin-condition-exports'
+import esbuild from 'rollup-plugin-esbuild'
+import size from 'rollup-plugin-filesize'
+import { externals } from 'rollup-plugin-node-externals'
 
 export default defineConfig([
   // CommonJS (for Node) and ES module (for bundlers) build.
@@ -26,7 +27,7 @@ export default defineConfig([
       }),
       commonjs(),
       esbuild({
-        target: 'node14'
+        target: 'node14',
       }),
       alias({
         customResolver: resolve({ extensions: ['.tsx', '.ts'] }),

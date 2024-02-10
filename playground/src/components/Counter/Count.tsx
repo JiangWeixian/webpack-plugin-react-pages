@@ -1,10 +1,9 @@
 /**
  * Examples for rematch commmon
  */
-import React from 'react'
 import { connect } from 'react-redux'
 
-import { RootState, Dispatch } from '@/store'
+import type { Dispatch, RootState } from '@/store'
 
 const mapState = (state: RootState) => {
   return {
@@ -19,11 +18,11 @@ const mapDispatch = ({ count }: Dispatch) => {
   }
 }
 
-type CountProps = Partial<ReturnType<typeof mapState> & ReturnType<typeof mapDispatch>>
+type CountProps = Partial<ReturnType<typeof mapDispatch> & ReturnType<typeof mapState>>
 
 const Count = (props: CountProps) => (
-  <div className="p-2 shadow-lg rounded-md flex flex-col justify-center bg-base-300">
-    <div className="stats shadow bg-transparent">
+  <div className="bg-base-300 flex flex-col justify-center rounded-md p-2 shadow-lg">
+    <div className="stats bg-transparent shadow">
       <div className="stat">
         <div className="stat-title">The count</div>
         <div className="stat-value">{props.count}</div>

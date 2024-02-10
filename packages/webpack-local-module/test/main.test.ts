@@ -1,5 +1,11 @@
+import {
+  describe,
+  expect,
+  test,
+  vi,
+} from 'vitest'
+
 import { welcome } from '../src'
-import { describe, test, expect, vi } from 'vitest'
 
 describe('index', () => {
   test('demo part', () => {

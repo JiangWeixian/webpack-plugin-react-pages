@@ -1,5 +1,6 @@
 declare module 'virtual:react-pages' {
-  import { RouteObject } from 'react-router'
+  import type { RouteObject } from 'react-router'
+
   const Pages: RouteObject[]
   export default Pages
 }
@@ -7,6 +8,7 @@ declare module 'virtual:react-pages' {
 declare module '~react-pages' {
   // eslint-disable-next-line import/no-duplicates
   import type { RouteObject } from 'react-router'
+
   const routes: RouteObject[]
   export default routes
 }
@@ -14,6 +16,7 @@ declare module '~react-pages' {
 declare module 'virtual:generated-pages-react' {
   // eslint-disable-next-line import/no-duplicates
   import type { RouteObject } from 'react-router'
+
   const routes: RouteObject[]
   export default routes
 }

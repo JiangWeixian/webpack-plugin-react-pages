@@ -1,0 +1,106 @@
+{
+  "name": "webpack-plugin-react-pages",
+  "version": "0.3.3",
+  "packageManager": "pnpm@8.10.5",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14"
+  },
+  "homepage": "https://github.com/jiangWeixian/webpack-plugin-react-pages#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jiangWeixian/webpack-plugin-react-pages.git",
+    "directory": "packages/webpack-plugin-react-pages"
+  },
+  "bugs": {
+    "url": "https://github.com/jiangWeixian/webpack-plugin-react-pages/issues",
+    "email": "jiangweixian1994@gmail.com"
+  },
+  "author": {
+    "name": "JW",
+    "email": "jiangweixian1994@gmail.com",
+    "url": "https://twitter.com/jiangweixian"
+  },
+  "files": [
+    "dist",
+    "shim.d.ts"
+  ],
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts"
+    },
+    "./resolver": {
+      "import": "./dist/resolver/index.mjs",
+      "require": "./dist/resolver/index.cjs",
+      "types": "./dist/resolver/index.d.ts"
+    },
+    "./shim": {
+      "types": "./shim.d.ts"
+    }
+  },
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "shim": ["./shim.d.ts"],
+      "resolver": ["./dist/resolver/index.d.ts"]
+    }
+  },
+  "scripts": {
+    "build:lib": "rollup -c --silent",
+    "build:dts": "tsc",
+    "build": "rimraf dist && run-p build:*",
+    "dev": "rollup -c -w --silent",
+    "test": "vitest"
+  },
+  "lint-staged": {
+    "**/**/*.{js,ts,tsx,vue,json}": ["eslint --fix"]
+  },
+  "peerDependencies": {
+    "react-router": ">=6",
+    "react-router-dom": ">=6",
+    "webpack": ">=5"
+  },
+  "peerDependenciesMeta": {
+    "react-router": {
+      "optional": true
+    },
+    "react-router-dom": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "debug": "^4.3.4",
+    "pathe": "^0.2.0",
+    "webpack-local-module": "workspace:*",
+    "webpack-virtual-modules": "^0.5.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-alias": "^3.1.9",
+    "@rollup/plugin-commonjs": "^21.0.2",
+    "@rollup/plugin-node-resolve": "^13.1.3",
+    "@types/debug": "^4.1.7",
+    "@types/jest": "27.0.2",
+    "@types/lodash": "4.14.181",
+    "@types/node": "20.11.17",
+    "esbuild": "^0.14.48",
+    "lodash": "^4.17.21",
+    "npm-run-all": "^4.1.5",
+    "react-router": "6.3.0",
+    "rimraf": "3.0.2",
+    "rollup": "2.72.1",
+    "rollup-plugin-bundle-size": "^1.0.3",
+    "rollup-plugin-esbuild": "^4.9.1",
+    "rollup-plugin-node-externals": "^4.0.0",
+    "rollup-plugin-size": "^0.2.2",
+    "typescript": "5.3.3",
+    "vite": "^2.9.13",
+    "vite-plugin-pages": "0.23.0",
+    "vitest": "^0.18.1",
+    "webpack": "5.44.0"
+  }
+}

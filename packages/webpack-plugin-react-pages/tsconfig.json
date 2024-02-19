@@ -16,9 +16,9 @@
     "declarationDir": "dist",
     "emitDeclarationOnly": true,
     "importHelpers": true,
-    "esModuleInterop": true,
     "sourceMap": true,
     "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true
   },

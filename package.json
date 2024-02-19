@@ -1,7 +1,7 @@
 {
   "name": "webpack-plugin-react-pages",
   "version": "0.3.3",
-  "packageManager": "pnpm@7.23.0",
+  "packageManager": "pnpm@7.23.0+sha256.78bbf6c696a83afd4fcd2e638876e40ed1a99930cafcde107bbadbab23807bd9",
   "license": "MIT",
   "engines": {
     "node": ">=14"

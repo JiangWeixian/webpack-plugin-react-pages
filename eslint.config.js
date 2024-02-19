@@ -5,7 +5,12 @@ module.exports = aiou({
   regexp: false,
 }, [
   {
-    ignores: ['**test/fixtures/**', '**/vite-plugin-pages-types.ts', '**/react-env.d.ts'],
+    ignores: [
+      '**test/fixtures/**',
+      '**/vite-plugin-pages-types.ts',
+      '**/react-env.d.ts',
+      '**/examples/**',
+    ],
   },
   {
     rules: {

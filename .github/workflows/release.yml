@@ -4,7 +4,7 @@ on:
     branches:
       - main
       - master
-      - 'releases/*'
+      - "releases/*"
 env:
   CI: true
 jobs:
@@ -19,7 +19,7 @@ jobs:
       - name: setup node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 14
+          node-version: 16
       - uses: pnpm/action-setup@v2
         name: Install pnpm
         id: pnpm-install
@@ -40,7 +40,7 @@ jobs:
       - name: install dependencies
         run: pnpm install --frozen-lockfile=false
       - name: create and publish versions
-        uses: changesets/action@master
+        uses: changesets/action@v1
         with:
           version: pnpm ci:version
           commit: "chore: update versions"

@@ -1,0 +1,25 @@
+{
+  "name": "playground-rspack",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "NODE_ENV=development rspack serve",
+    "build": "NODE_ENV=production rspack build"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@rspack/cli": "0.5.4",
+    "@rspack/core": "0.5.4",
+    "@rspack/plugin-react-refresh": "0.5.4",
+    "@types/react": "18.2.25",
+    "@types/react-dom": "^18.2.19",
+    "react-refresh": "^0.14.0",
+    "react-router": "6.3.0",
+    "react-router-dom": "6.3.0",
+    "webpack-local-module": "workspace:*",
+    "webpack-plugin-react-pages": "workspace:*"
+  }
+}

@@ -1,5 +1,20 @@
 # webpack-plugin-react-pages
 
+## 0.4.0
+
+### Minor Changes
+
+- fb08af3: require node>=16
+- fb08af3: support rspack
+
+### Patch Changes
+
+- fb08af3: custom local module options
+- Updated dependencies [fb08af3]
+- Updated dependencies [fb08af3]
+- Updated dependencies [fb08af3]
+  - webpack-local-module@1.0.0
+
 ## 0.3.3
 
 ### Patch Changes

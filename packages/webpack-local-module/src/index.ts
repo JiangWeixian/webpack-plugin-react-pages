@@ -1,18 +1,12 @@
-import { join } from 'node:path'
-
 import { outputFileSync } from 'fs-extra'
 
-import { resolveId } from './utils'
+import { DIRNAME } from './constants'
+import { resolveId, resolvePath } from './utils'
 
 import type { Compiler, RspackPluginInstance } from '@rspack/core'
+import type { ResolvedOptions } from './types'
 
 type Modules = Record<string, string>
-
-interface ResolvedOptions {
-  root: string
-  moduleIdToPath: Record<string, string>
-  moduleIdToContent: Record<string, string>
-}
 
 export interface Options {
   /**
@@ -21,8 +15,6 @@ export interface Options {
    */
   dirname?: string
 }
-
-const DIRNAME = '.rlm'
 
 export class WebpackLocalModule implements RspackPluginInstance {
   private modules: Modules = {}
@@ -48,8 +40,9 @@ export class WebpackLocalModule implements RspackPluginInstance {
 
   writeModule(moduleId: string, nextContent: string) {
     const id = resolveId(moduleId, this.resolvedOptions.root)
-    const path = this.resolvedOptions.moduleIdToPath[id]
+    const path = this.resolvedOptions.moduleIdToPath[id] ?? resolvePath(id, this.resolvedOptions)
     if (path) {
+      this.resolvedOptions.moduleIdToPath[id] = path
       outputFileSync(path, nextContent)
     }
   }
@@ -61,15 +54,20 @@ export class WebpackLocalModule implements RspackPluginInstance {
   }
 
   private resolveOptions(compiler: Compiler, options: Options, modules: Record<string, string>) {
-    const resolvedRoot = join(compiler.context ?? process.cwd(), 'node_modules', options.dirname ?? DIRNAME)
+    const resolvedRoot = compiler.context ?? process.cwd()
+    const resolvedDir = options.dirname ?? DIRNAME
     const moduleIdToPath: Record<string, string> = {}
     const moduleIdToContent: Record<string, string> = {}
     for (const [moduleId] of Object.entries(modules)) {
       const id = resolveId(moduleId, resolvedRoot)
-      moduleIdToPath[id] = join(resolvedRoot, id)
+      moduleIdToPath[id] = resolvePath(id, {
+        root: resolvedRoot,
+        dirname: resolvedDir,
+      })
       moduleIdToContent[id] = this.modules[moduleId]
     }
     return {
+      dirname: resolvedDir,
       root: resolvedRoot,
       moduleIdToPath,
       moduleIdToContent,

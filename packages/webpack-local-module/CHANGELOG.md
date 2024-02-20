@@ -1,5 +1,12 @@
 # webpack-local-module
 
+## 1.0.1
+
+### Patch Changes
+
+- e152d93: external ufo and fs-extra
+- e152d93: bundle target=node16
+
 ## 1.0.0
 
 ### Major Changes

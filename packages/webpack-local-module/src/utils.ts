@@ -13,5 +13,5 @@ export function resolveId(moduleId: string, root: string = process.cwd()) {
 }
 
 export function resolvePath(id: string, options: Pick<ResolvedOptions, 'dirname' | 'root'>) {
-  return join(options.root, 'node_modules', options.dirname)
+  return join(options.root, 'node_modules', options.dirname, id)
 }

@@ -41,6 +41,10 @@
     "test": "vitest",
     "pretest": "pnpm run build"
   },
+  "dependencies": {
+    "fs-extra": "^11.2.0",
+    "ufo": "^1.4.0"
+  },
   "devDependencies": {
     "@rollup/plugin-alias": "4.0.3",
     "@rollup/plugin-commonjs": "24.0.1",
@@ -60,7 +64,6 @@
     "ts-patch": "3.1.1",
     "typescript": "5.3.3",
     "typescript-transform-paths": "3.4.6",
-    "ufo": "^1.4.0",
     "vitest": "0.10.0"
   }
 }

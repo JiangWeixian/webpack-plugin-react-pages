@@ -27,9 +27,10 @@ const { WebpackPluginReactPages } = require('webpack-plugin-react-pages')
 
 Then, import `virutal:react-pages` module in project
 
-```ts
+```tsx
 import React, { Suspense } from 'react'
 import { BrowserRouter, useRoutes } from 'react-router-dom'
+
 import routes from 'virtual:react-pages'
 
 const Routes = () => {
@@ -64,6 +65,22 @@ Support follow options from [vite-plugin-pages](https://github.com/hannoeru/vite
 - `extendRoute`
 - `onRoutesGenerated`
 - `onClientGenerated`
+
+`options.rspack`
+
+- type `boolean`
+  
+compatible with `rspack`
+
+`options.localModuleOptions`
+
+- type check [webpack-local-module#options](https://www.npmjs.com/package/webpack-local-module) for more details
+
+only worked when `options.rspack` is enabled.
+
+`options.namespace`
+
+plugin will register `$page` instance on `compiler` by default, custom `namespace`, register instance on `compiler[namespace].$page`
 
 ### TypeScript
 

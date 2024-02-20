@@ -36,10 +36,14 @@ import `virtual-module` in project, e.g.
 import vm from 'virtual-module'
 ```
 
-## development
+## options
 
-- **Setup** - `pnpm i`
-- **Build** - `pnpm build`
+`options.dirname`
+
+- type `string`
+- default `.rlm`
+
+plugin write module content into `<root>/node_modules/.rlm` dir by default
 
 # 
 <div align='right'>

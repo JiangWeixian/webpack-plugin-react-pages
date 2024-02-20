@@ -14,6 +14,7 @@ import VirtualModulesPlugin from 'webpack-virtual-modules'
 import { logger } from './utils'
 import { createFilteredWatchFileSystem } from './wfs'
 
+import type { Options as WebpackLocalModuleOptions } from 'webpack-local-module'
 import type { Compiler } from './types'
 import type {
   PageContext as PageContextImpl,
@@ -46,6 +47,10 @@ type WebpackPluginReactPagesOptions = Omit<
    * @default false
    */
   rspack?: boolean
+  /**
+   * @description With rspack bundler, use `webpack-local-module` custom behavior with localModuleOptions
+   */
+  localModuleOptions?: WebpackLocalModuleOptions
 }
 
 const isVirtualSchemaModule = (id: string) => id.includes('virtual:')
@@ -78,6 +83,7 @@ export class WebpackPluginReactPages {
     routeStyle = 'remix',
     namespace,
     rspack = false,
+    localModuleOptions,
     ...options
   }: WebpackPluginReactPagesOptions = {}) {
     this.page = new PageContext({
@@ -109,7 +115,7 @@ export class WebpackPluginReactPages {
     this.vm = rspack
       ? new WebpackLocalModule({
         ...modules,
-      }, { dirname: '.react-routes' })
+      }, localModuleOptions ?? { dirname: '.react-routes' })
       : new VirtualModulesPlugin({
         ...modules,
       })

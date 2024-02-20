@@ -21,6 +21,7 @@
     "email": "jiangweixian1994@gmail.com",
     "url": "https://twitter.com/jiangweixian"
   },
+  "files": ["dist"],
   "exports": {
     "./package.json": "./package.json",
     ".": {
@@ -37,7 +38,7 @@
     "build:dts": "tspc",
     "build": "rimraf dist && run-p build:*",
     "dev": "rollup -c -w --silent",
-    "test": "echo test",
+    "test": "vitest",
     "pretest": "pnpm run build"
   },
   "devDependencies": {
@@ -59,6 +60,7 @@
     "ts-patch": "3.1.1",
     "typescript": "5.3.3",
     "typescript-transform-paths": "3.4.6",
+    "ufo": "^1.4.0",
     "vitest": "0.10.0"
   }
 }

@@ -2,6 +2,8 @@ import { join } from 'node:path'
 
 import { outputFileSync } from 'fs-extra'
 
+import { resolveId } from './utils'
+
 import type { Compiler, RspackPluginInstance } from '@rspack/core'
 
 type Modules = Record<string, string>
@@ -12,7 +14,7 @@ interface ResolvedOptions {
   moduleIdToContent: Record<string, string>
 }
 
-interface Options {
+export interface Options {
   /**
    * @description Write virtual module into dirname
    * @default .rlm
@@ -21,10 +23,6 @@ interface Options {
 }
 
 const DIRNAME = '.rlm'
-
-function resolveId(moduleId: string) {
-  return moduleId.replace(/node_modules\//, '')
-}
 
 export class WebpackLocalModule implements RspackPluginInstance {
   private modules: Modules = {}
@@ -49,7 +47,7 @@ export class WebpackLocalModule implements RspackPluginInstance {
   }
 
   writeModule(moduleId: string, nextContent: string) {
-    const id = resolveId(moduleId)
+    const id = resolveId(moduleId, this.resolvedOptions.root)
     const path = this.resolvedOptions.moduleIdToPath[id]
     if (path) {
       outputFileSync(path, nextContent)
@@ -67,7 +65,7 @@ export class WebpackLocalModule implements RspackPluginInstance {
     const moduleIdToPath: Record<string, string> = {}
     const moduleIdToContent: Record<string, string> = {}
     for (const [moduleId] of Object.entries(modules)) {
-      const id = resolveId(moduleId)
+      const id = resolveId(moduleId, resolvedRoot)
       moduleIdToPath[id] = join(resolvedRoot, id)
       moduleIdToContent[id] = this.modules[moduleId]
     }

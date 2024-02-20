@@ -1,5 +1,14 @@
 # webpack-plugin-react-pages
 
+## 0.4.1
+
+### Patch Changes
+
+- e152d93: bundle target=node16
+- Updated dependencies [e152d93]
+- Updated dependencies [e152d93]
+  - webpack-local-module@1.0.1
+
 ## 0.4.0
 
 ### Minor Changes

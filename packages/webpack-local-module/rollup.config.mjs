@@ -27,7 +27,7 @@ export default defineConfig([
       }),
       commonjs(),
       esbuild({
-        target: 'node14',
+        target: 'node16',
       }),
       alias({
         customResolver: resolve({ extensions: ['.tsx', '.ts'] }),

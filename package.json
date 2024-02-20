@@ -22,7 +22,7 @@
   },
   "scripts": {
     "build": "pnpm --filter=./packages/** run build",
-    "dev": "pnpm --filter=./packages/** run dev",
+    "dev": "pnpm --filter=./packages/** --parallel run dev",
     "play": "pnpm --filter=./examples/playground run dev",
     "play:rspack": "pnpm --filter=./examples/rspack run dev",
     "test": "pnpm --filter=./packages/** run test",

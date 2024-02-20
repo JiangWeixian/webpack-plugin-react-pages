@@ -1,7 +1,7 @@
 # webpack-local-module
 > write virtual module into disk
 
-[![npm](https://img.shields.io/npm/v/webpack-local-module)](https://github.com/jiangwei.xian/webpack-local-module) [![GitHub](https://img.shields.io/npm/l/webpack-local-module)](https://github.com/jiangwei.xian/webpack-local-module)
+[![npm](https://img.shields.io/npm/v/webpack-local-module)](https://github.com/JiangWeixian/webpack-local-module) [![GitHub](https://img.shields.io/npm/l/webpack-local-module)](https://github.com/JiangWeixian/webpack-local-module)
 
 ## install
 

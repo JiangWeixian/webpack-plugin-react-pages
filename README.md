@@ -1,0 +1,1 @@
+./packages/webpack-plugin-react-pages/README.md

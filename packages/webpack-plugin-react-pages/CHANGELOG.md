@@ -1,5 +1,11 @@
 # webpack-plugin-react-pages
 
+## 0.4.2
+
+### Patch Changes
+
+- c02e20b: `virtual:react-pages` should be cacheable
+
 ## 0.4.1
 
 ### Patch Changes

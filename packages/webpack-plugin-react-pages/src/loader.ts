@@ -24,6 +24,7 @@ async function RoutesLoader(
   // Make HMR work
   $page.options.dirs.forEach((options) => {
     const dir = resolve(this._compiler.context, options.dir)
+    logger('add context dependency', dir)
     this.addContextDependency(dir)
   })
 

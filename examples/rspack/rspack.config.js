@@ -14,6 +14,9 @@ module.exports = {
   entry: {
     main: './src/main.tsx',
   },
+  devServer: {
+    historyApiFallback: true
+  },
   resolve: {
     extensions: ['...', '.ts', '.tsx', '.jsx'],
   },

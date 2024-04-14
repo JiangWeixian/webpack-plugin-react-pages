@@ -334,7 +334,7 @@ importers:
         specifier: 1.3.0
         version: 1.3.0(react@18.0.0)
       webpack-plugin-react-pages:
-        specifier: workspace:^0.4.0
+        specifier: workspace:^0.4.1
         version: link:../../packages/webpack-plugin-react-pages
     devDependencies:
       '@babel/core':

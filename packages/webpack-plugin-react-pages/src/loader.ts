@@ -1,3 +1,5 @@
+import { resolve } from 'node:path'
+
 import { logger } from './utils'
 
 import type webpack from 'webpack'
@@ -9,17 +11,21 @@ interface RoutesLoaderOptions {
 
 async function RoutesLoader(
   this: webpack.LoaderContext<RoutesLoaderOptions>,
-  source: string,
+  _source: string,
   ...args: any
 ) {
   const callback = this.async()
   const { namespace } = this.getOptions()
-  // disable cache, make sure the pages data is always called
-  this.cacheable(false)
+  this.cacheable(true)
   let $page = (this._compiler as Compiler).$page
   if (namespace) {
     $page = this._compiler?.[namespace]?.$page
   }
+  // Make HMR work
+  $page.options.dirs.forEach((options) => {
+    const dir = resolve(this._compiler.context, options.dir)
+    this.addContextDependency(dir)
+  })
 
   logger('page instance', $page)
 

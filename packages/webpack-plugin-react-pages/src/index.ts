@@ -11,7 +11,6 @@ import webpack from 'webpack'
 import { WebpackLocalModule } from 'webpack-local-module'
 import VirtualModulesPlugin from 'webpack-virtual-modules'
 
-import { logger } from './utils'
 import { createFilteredWatchFileSystem } from './wfs'
 
 import type { Options as WebpackLocalModuleOptions } from 'webpack-local-module'
@@ -170,14 +169,6 @@ export class WebpackPluginReactPages {
           },
         },
       ],
-    })
-
-    // rollup typo
-    compiler.hooks.compilation.tap(PLUGIN, async (compilation: any) => {
-      for (const dir of this.page.options.dirs) {
-        logger('page dirs', dir)
-        compilation.contextDependencies.add(resolve(compiler.context, dir.dir))
-      }
     })
 
     // webpack-virtual-modules include webpack@v4 types directly

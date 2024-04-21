@@ -1,5 +1,11 @@
 # webpack-local-module
 
+## 1.1.0
+
+### Minor Changes
+
+- ba0b5ff: enable access webpack local module resolved options
+
 ## 1.0.1
 
 ### Patch Changes

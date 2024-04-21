@@ -1,5 +1,12 @@
 # webpack-plugin-react-pages
 
+## 0.4.3
+
+### Patch Changes
+
+- Updated dependencies [ba0b5ff]
+  - webpack-local-module@1.1.0
+
 ## 0.4.2
 
 ### Patch Changes

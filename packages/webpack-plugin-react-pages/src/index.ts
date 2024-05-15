@@ -180,8 +180,9 @@ export class WebpackPluginReactPages {
       invalid()
     })
 
+    // rspack not support webpack-virtual-modules, disable patch watch file system
     // related to pr: https://github.com/sysgears/webpack-virtual-modules/pull/129/files
-    if (!this._watchRunPatched.has(compiler)) {
+    if (!this._watchRunPatched.has(compiler) && !this.rspack) {
       compiler.watchFileSystem = createFilteredWatchFileSystem(compiler.watchFileSystem as any)
       this._watchRunPatched.add(compiler)
     }

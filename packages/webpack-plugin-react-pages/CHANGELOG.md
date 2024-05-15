@@ -1,5 +1,11 @@
 # webpack-plugin-react-pages
 
+## 0.4.4
+
+### Patch Changes
+
+- 01725c4: disable patch watch system on rspack
+
 ## 0.4.3
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # webpack-plugin-react-pages
 
+## 0.4.5
+
+### Patch Changes
+
+- 794ead3: resolveModuleId option custom handle virtual: protocol behavior
+- 794ead3: support virtual: protocol in rspack
+
 ## 0.4.4
 
 ### Patch Changes

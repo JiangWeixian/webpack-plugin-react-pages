@@ -29,6 +29,7 @@ const template = `
 const routes = []
 export default routes;
 `
+const defaultResolverModuleId = (moduleId: string) => moduleId.replace('virtual:', 'virtual-')
 
 const require = createRequire(import.meta.url)
 
@@ -55,11 +56,11 @@ type WebpackPluginReactPagesOptions = Omit<
   localModuleOptions?: WebpackLocalModuleOptions
   /**
    * @description By default, webpack & rspack not support `virtual:` protocol
-   * this plugin will redirect all virtual module(defined in resolvers) to `virtual-` prefix
-   * you can disable this behavior by setting `overwriteVirtualProtocol` to `true`
+   * plugin will redirect all virtual module(defined in resolvers) to `virtual-` prefix via NormalModuleReplacementPlugin
+   * you can custom this behavior by setting `resolverModuleId`
    * and handle virtual module in your own way e.g. swc or babel plugin during loader
    */
-  overwriteVirtualProtocol?: boolean
+  resolveModuleId?: (moduleId: string) => string
 }
 
 const isVirtualSchemaModule = (id: string) => id.includes('virtual:')
@@ -84,7 +85,7 @@ export class WebpackPluginReactPages {
   moduleRE: RegExp
   resolvedModuleRE: RegExp
   shouldSupportVirtualModules = false
-  overwriteVirtualProtocol = true
+  resolveModuleId: WebpackPluginReactPagesOptions['resolverModuleId']
   namespace?: string
   rspack?: boolean
   private _watchRunPatched: WeakSet<Compiler> = new WeakSet()
@@ -94,7 +95,7 @@ export class WebpackPluginReactPages {
     namespace,
     rspack = false,
     localModuleOptions,
-    overwriteVirtualProtocol = true,
+    resolveModuleId,
     ...options
   }: WebpackPluginReactPagesOptions = {}) {
     this.page = new PageContext({
@@ -104,7 +105,7 @@ export class WebpackPluginReactPages {
       ...options,
       // TODO: type safe
     } as any) as any
-    this.overwriteVirtualProtocol = overwriteVirtualProtocol
+    this.resolveModuleId = resolveModuleId
     this.namespace = namespace
     this.moduleIds = this.page.options.resolver.resolveModuleIds()
     this.resolvedModuleIds = this.moduleIds.map((id) => {
@@ -112,7 +113,7 @@ export class WebpackPluginReactPages {
       // virtual:react-pages -> virtual-react-pages
       if (isVirtualSchemaModule(id)) {
         this.shouldSupportVirtualModules = true
-        resolvedId = id.replace('virtual:', 'virtual-')
+        resolvedId = (resolveModuleId ?? defaultResolverModuleId)(id)
       }
       return resolvedId
     })
@@ -161,10 +162,10 @@ export class WebpackPluginReactPages {
     // Applying a webpack compiler to the virtual module
     this.vm.apply(compiler as any)
     // support `virtual:` protocol in webpack@5
-    if (this.overwriteVirtualProtocol && this.shouldSupportVirtualModules) {
+    if (!this.resolveModuleId && this.shouldSupportVirtualModules) {
       const NormalModuleReplacementPlugin = this.rspack ? require('@rspack/core').rspack.webpack.NormalModuleReplacementPlugin : webpack.NormalModuleReplacementPlugin
       this.nmp = new NormalModuleReplacementPlugin(this.moduleRE, (resource) => {
-        resource.request = resource.request.replace('virtual:', 'virtual-')
+        resource.request = defaultResolverModuleId(resource.request)
       })
       this.nmp.apply(compiler)
     }

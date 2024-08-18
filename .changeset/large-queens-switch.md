@@ -2,4 +2,4 @@
 "webpack-plugin-react-pages": patch
 ---
 
-overwriteVirtualProtol option config virtual: should overwrite into virtual-
+resolveModuleId option custom handle virtual: protocol behavior

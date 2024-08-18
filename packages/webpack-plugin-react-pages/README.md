@@ -82,6 +82,10 @@ only worked when `options.rspack` is enabled.
 
 plugin will register `$page` instance on `compiler` by default, custom `namespace`, register instance on `compiler[namespace].$page`
 
+`options.resolveModuleId`
+
+By default, plugin will replace `virtual:` -> `virtual-` when `resolver.resolveModuleId()` modules contain `virtual:` protocol. If you want to custom this behavior, you can pass `options.resolveModuleId` function to plugin.
+
 ### TypeScript
 
 make `virutal:react-pages` type safe.

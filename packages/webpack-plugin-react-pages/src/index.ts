@@ -85,7 +85,7 @@ export class WebpackPluginReactPages {
   moduleRE: RegExp
   resolvedModuleRE: RegExp
   shouldSupportVirtualModules = false
-  resolveModuleId: WebpackPluginReactPagesOptions['resolverModuleId']
+  resolveModuleId: WebpackPluginReactPagesOptions['resolveModuleId']
   namespace?: string
   rspack?: boolean
   private _watchRunPatched: WeakSet<Compiler> = new WeakSet()

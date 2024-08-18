@@ -61,6 +61,7 @@
     "**/**/*.{js,ts,tsx,vue,json}": ["eslint --fix"]
   },
   "peerDependencies": {
+    "@rspack/core": "*",
     "react-router": ">=6",
     "react-router-dom": ">=6",
     "webpack": ">=5"
@@ -70,6 +71,9 @@
       "optional": true
     },
     "react-router-dom": {
+      "optional": true
+    },
+    "@rspack/core": {
       "optional": true
     }
   },
@@ -83,6 +87,7 @@
     "@rollup/plugin-alias": "^3.1.9",
     "@rollup/plugin-commonjs": "^21.0.2",
     "@rollup/plugin-node-resolve": "^13.1.3",
+    "@rspack/core": "0.7.5",
     "@types/debug": "^4.1.7",
     "@types/jest": "27.0.2",
     "@types/lodash": "4.14.181",

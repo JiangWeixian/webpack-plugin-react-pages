@@ -1,3 +1,4 @@
+import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 
 import {
@@ -28,6 +29,9 @@ const template = `
 const routes = []
 export default routes;
 `
+const defaultResolverModuleId = (moduleId: string) => moduleId.replace('virtual:', 'virtual-')
+
+const require = createRequire(import.meta.url)
 
 type WebpackPluginReactPagesOptions = Omit<
   UserOptions,
@@ -50,6 +54,13 @@ type WebpackPluginReactPagesOptions = Omit<
    * @description With rspack bundler, use `webpack-local-module` custom behavior with localModuleOptions
    */
   localModuleOptions?: WebpackLocalModuleOptions
+  /**
+   * @description By default, webpack & rspack not support `virtual:` protocol
+   * plugin will redirect all virtual module(defined in resolvers) to `virtual-` prefix via NormalModuleReplacementPlugin
+   * you can custom this behavior by setting `resolverModuleId`
+   * and handle virtual module in your own way e.g. swc or babel plugin during loader
+   */
+  resolveModuleId?: (moduleId: string) => string
 }
 
 const isVirtualSchemaModule = (id: string) => id.includes('virtual:')
@@ -74,6 +85,7 @@ export class WebpackPluginReactPages {
   moduleRE: RegExp
   resolvedModuleRE: RegExp
   shouldSupportVirtualModules = false
+  resolveModuleId: WebpackPluginReactPagesOptions['resolveModuleId']
   namespace?: string
   rspack?: boolean
   private _watchRunPatched: WeakSet<Compiler> = new WeakSet()
@@ -83,6 +95,7 @@ export class WebpackPluginReactPages {
     namespace,
     rspack = false,
     localModuleOptions,
+    resolveModuleId,
     ...options
   }: WebpackPluginReactPagesOptions = {}) {
     this.page = new PageContext({
@@ -92,6 +105,7 @@ export class WebpackPluginReactPages {
       ...options,
       // TODO: type safe
     } as any) as any
+    this.resolveModuleId = resolveModuleId
     this.namespace = namespace
     this.moduleIds = this.page.options.resolver.resolveModuleIds()
     this.resolvedModuleIds = this.moduleIds.map((id) => {
@@ -99,7 +113,7 @@ export class WebpackPluginReactPages {
       // virtual:react-pages -> virtual-react-pages
       if (isVirtualSchemaModule(id)) {
         this.shouldSupportVirtualModules = true
-        resolvedId = id.replace('virtual:', 'virtual-')
+        resolvedId = (resolveModuleId ?? defaultResolverModuleId)(id)
       }
       return resolvedId
     })
@@ -134,17 +148,6 @@ export class WebpackPluginReactPages {
       compiler.$page = this.page
       compiler.$page.invalid = invalid
     }
-    // support `virtual:` protocol in webpack@5
-    if (this.shouldSupportVirtualModules && !this.rspack) {
-      this.nmp = new webpack.NormalModuleReplacementPlugin(this.moduleRE, (resource) => {
-        resource.request = resolve(
-          compiler.context,
-          `node_modules/${resource.request.replace('virtual:', 'virtual-')}`,
-        )
-      })
-      this.nmp.apply(compiler)
-    }
-
     if (!compiler.options.resolve) {
       compiler.options.resolve = {}
     }
@@ -155,6 +158,18 @@ export class WebpackPluginReactPages {
         '/src': join(this.page.options.root, 'src'),
       }
     }
+    // webpack-virtual-modules include webpack@v4 types directly
+    // Applying a webpack compiler to the virtual module
+    this.vm.apply(compiler as any)
+    // support `virtual:` protocol in webpack@5
+    if (!this.resolveModuleId && this.shouldSupportVirtualModules) {
+      const NormalModuleReplacementPlugin = this.rspack ? require('@rspack/core').rspack.webpack.NormalModuleReplacementPlugin : webpack.NormalModuleReplacementPlugin
+      this.nmp = new NormalModuleReplacementPlugin(this.moduleRE, (resource) => {
+        resource.request = defaultResolverModuleId(resource.request)
+      })
+      this.nmp.apply(compiler)
+    }
+
     const resolvedModuleRE = this.resolvedModuleRE
     compiler.options.module.rules.push({
       include(resource) {
@@ -170,10 +185,6 @@ export class WebpackPluginReactPages {
         },
       ],
     })
-
-    // webpack-virtual-modules include webpack@v4 types directly
-    // Applying a webpack compiler to the virtual module
-    this.vm.apply(compiler as any)
 
     // Register virtual module during build
     !this.rspack && compiler.hooks.compilation.tap(PLUGIN, () => {

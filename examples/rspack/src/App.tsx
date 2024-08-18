@@ -1,7 +1,7 @@
 import './App.css'
 
 import { BrowserRouter, useRoutes } from 'react-router-dom'
-import routes from 'virtual-react-pages'
+import routes from 'virtual:react-pages'
 
 const Routes = () => {
   const element = useRoutes(routes)

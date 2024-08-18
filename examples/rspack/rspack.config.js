@@ -69,7 +69,7 @@ module.exports = {
       rspack: true,
       resolver: {
         ...nextEnhancedResolver(),
-        resolveModuleIds: () => ['virtual-react-pages'],
+        resolveModuleIds: () => ['virtual:react-pages'],
       },
     }),
     new rspack.DefinePlugin({
